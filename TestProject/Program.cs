@@ -1,17 +1,25 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using TestProject;
 using TestProject.Services.Authorization;
 using TestProject.Services.Authorization.Settings;
+using TestProject.Services.Mail;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+string connection = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
+
 builder.Services.AddControllersWithViews().AddNewtonsoftJson(options => 
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
 builder.Services.AddTransient<IJwtService, JwtService>();
+builder.Services.AddTransient<IMailService, MailService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
