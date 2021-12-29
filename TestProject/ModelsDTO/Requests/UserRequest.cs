@@ -6,16 +6,16 @@ namespace TestProject.Models.Request
     {
         [Required]
         [StringLength(30, MinimumLength = 2)]
-        public string Lastname { set; get; }
+        public string Lastname { set; get; } = "";
         [Required]
         [StringLength(30, MinimumLength = 2)]
-        public string Firstname { set; get; }
+        public string Firstname { set; get; } = "";
         [Required]
         [EmailAddress]
-        public string Email { set; get; }
+        public string Email { set; get; } = "";
         [Required]
-        public string Password { set; get; }
+        public string Password { set; get; } = "";
         [Required]
-        public string Role { set; get; }
+        public Guid RoleId { set; get; }
     }
 }

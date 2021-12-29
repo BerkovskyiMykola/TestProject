@@ -92,18 +92,13 @@ namespace TestProject.Controllers
             });
         }
 
-        [HttpPut("edit/profile/{id}")]
+        [HttpPut("edit/profile")]
         [Authorize]
-        public async Task<IActionResult> PutUserProfile(Guid id, ProfileRequest profile)
+        public async Task<IActionResult> PutUserProfile(ProfileRequest profile)
         {
-            if (id != profile.UserId)
-            {
-                return BadRequest();
-            }
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.Id.ToString() == HttpContext.User.Identity!.Name);
 
-            var user = await _context.Users.FindAsync(id);
-
-            if(user == null)
+            if (user == null)
             {
                 return BadRequest();
             }
@@ -125,6 +120,65 @@ namespace TestProject.Controllers
                 .Where(x => x.Email != HttpContext.User.Identity!.Name)
                 .Select(x => new { x.Id, x.Firstname, x.Lastname, x.Email, x.Role })
                 .ToListAsync());
+        }
+
+        [HttpPost("create")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> PostUser(User model)
+        {
+            if (await _context.Users.AnyAsync(x => x.Email == model.Email))
+            {
+                return BadRequest("User with such Email exists");
+            }
+
+            model.Password = GetPasswordHash(model.Password);
+
+            await _context.Users.AddAsync(model);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { model.Id, model.Firstname, model.Lastname, model.Email, model.Role });
+        }
+
+        [HttpPut("edit/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> PutUser(int id, EditUserRequest model)
+        {
+            if (id != model.UserId)
+            {
+                return BadRequest();
+            }
+
+            var user = await _context.Users.FindAsync(model.UserId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.Lastname = model.Lastname;
+            user.Firstname = model.Firstname;
+            user.RoleId = model.RoleId;
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpDelete("delete/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
 
         private string GetPasswordHash(string password)
