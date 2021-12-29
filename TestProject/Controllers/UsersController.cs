@@ -75,6 +75,7 @@ namespace TestProject.Controllers
         public async Task<IActionResult> GetUser()
         {
             var user = await _context.Users
+                .Include(x => x.Role)
                 .SingleOrDefaultAsync(x => x.Id.ToString() == HttpContext.User.Identity!.Name);
 
             if (user == null)
