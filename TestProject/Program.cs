@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using TestProject;
+using TestProject.Models;
 using TestProject.Services.Authorization;
 using TestProject.Services.Authorization.Settings;
 using TestProject.Services.Mail;
@@ -20,6 +22,7 @@ builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
 
 builder.Services.AddTransient<IJwtService, JwtService>();
 builder.Services.AddTransient<IMailService, MailService>();
+builder.Services.AddTransient<IPasswordHasher<User>, PasswordHasher<User>>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>

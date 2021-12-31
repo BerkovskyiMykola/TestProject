@@ -28,7 +28,7 @@ namespace TestProject.Services.Authorization
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login),
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.UserId),
                 new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role)
             };
             ClaimsIdentity claimsIdentity =

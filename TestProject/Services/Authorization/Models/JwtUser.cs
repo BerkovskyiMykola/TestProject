@@ -2,7 +2,7 @@
 {
     public class JwtUser
     {
-        public string Login { set; get; } = string.Empty;
+        public string UserId { set; get; } = string.Empty;
         public string Role { set; get; } = string.Empty;
     }
 }
