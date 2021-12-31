@@ -28,11 +28,9 @@ i18n.use(LanguageDetector).init({
                 Profile: "Profile",
 
                 "This field is required!": "This field is required!",
-                "This is not a valid email. Example: example@example.com": "This is not a valid email. Example: example@example.com",
+                "This is not a valid email. Example: example@example.com": "This is not a valid email.",
                 "The field must be between 2 and 30 characters.": "The field must be between 2 and 30 characters.",
-                "The field must be between 10 and 256 characters.": "The field must be between 10 and 256 characters.",
                 "The password must be between 8 and 18 characters.": "The password must be between 8 and 18 characters.",
-                "The field must be between 2 and 50 characters.": "The field must be between 2 and 50 characters.",
 
                 "Bad Request": "Bad Request",
                 "Not Found": "Not Found",
@@ -65,11 +63,9 @@ i18n.use(LanguageDetector).init({
                 Profile: "Профіль",
 
                 "This field is required!": "Це поле необхідне!",
-                "This is not a valid email. Example: example@example.com": "Це не валідна пошта. Наприклад: example@example.com",
+                "This is not a valid email. Example: example@example.com": "Це не валідна пошта.",
                 "The field must be between 2 and 30 characters.": "Поле має містити від 2 до 30 символів.",
-                "The field must be between 10 and 256 characters.": "Поле має містити від 10 до 256 символів.",
                 "The password must be between 8 and 18 characters.": "Пароль має містити від 8 до 18 символів.",
-                "The field must be between 2 and 50 characters.": "Поле має містити від 2 до 50 символів.",
 
                 "Bad Request": "Поганий запит",
                 "Not Found": "Не знайдено",
