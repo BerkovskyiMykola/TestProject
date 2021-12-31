@@ -23,7 +23,7 @@ namespace TestProject.Controllers
             _passwordHasher = passwordHasher;
         }
 
-        [HttpGet("one")]
+        [HttpGet("profile")]
         [Authorize]
         public async Task<IActionResult> GetUser()
         {
