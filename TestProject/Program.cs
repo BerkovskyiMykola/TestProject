@@ -17,7 +17,7 @@ string connection = builder.Configuration.GetConnectionString("DefaultConnection
 
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
 
-builder.Services.AddControllersWithViews().AddNewtonsoftJson(options => 
+builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
 builder.Services.AddTransient<IJwtService, JwtService>();
@@ -30,21 +30,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                         options.RequireHttpsMetadata = false;
                         options.TokenValidationParameters = new TokenValidationParameters
                         {
-                            // укзывает, будет ли валидироваться издатель при валидации токена
                             ValidateIssuer = true,
-                            // строка, представляющая издателя
                             ValidIssuer = JwtSettings.ISSUER,
-
-                            // будет ли валидироваться потребитель токена
                             ValidateAudience = true,
-                            // установка потребителя токена
                             ValidAudience = JwtSettings.AUDIENCE,
-                            // будет ли валидироваться время существования
                             ValidateLifetime = true,
-
-                            // установка ключа безопасности
                             IssuerSigningKey = JwtSettings.GetSymmetricSecurityKey(),
-                            // валидация ключа безопасности
                             ValidateIssuerSigningKey = true,
                         };
                     });

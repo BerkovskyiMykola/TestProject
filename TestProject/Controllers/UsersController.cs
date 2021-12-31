@@ -84,7 +84,7 @@ namespace TestProject.Controllers
                 return BadRequest("User with such Email exists");
             }
 
-            model.Password = GetPasswordHash(model.Password);
+            model.Password = _passwordHasher.HashPassword(model, model.Password);
 
             await _context.Users.AddAsync(model);
             await _context.SaveChangesAsync();
