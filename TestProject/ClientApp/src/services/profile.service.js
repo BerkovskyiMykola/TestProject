@@ -6,11 +6,11 @@ const API_URL = CURRENT_DOMAIN + "/Users/";
 
 class ProfileService {
 
-    getUser() {
+    getProfile() {
         return axios.get(API_URL + "profile", { headers: authHeader() });
     }
 
-    editUser(lastname, firstname) {
+    editProfile(lastname, firstname) {
         return axios.put(API_URL + "edit/profile", { lastname, firstname }, { headers: authHeader() });
     }
 }
