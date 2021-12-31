@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TestProject.Models;
@@ -48,9 +47,10 @@ namespace TestProject.Controllers
 
             var token = _jwtService.GetToken(new JwtUser { UserId = newUser.Id.ToString(), Role = newUser.Role!.Name });
 
-            return Ok(new { 
-                token, 
-                UserId = newUser.Id, 
+            return Ok(new
+            {
+                token,
+                UserId = newUser.Id,
                 Role = newUser.Role.Name
             });
         }
@@ -71,7 +71,7 @@ namespace TestProject.Controllers
             {
                 return BadRequest("Email or password is incorrect");
             }
-            else if(verificationResult == PasswordVerificationResult.SuccessRehashNeeded)
+            else if (verificationResult == PasswordVerificationResult.SuccessRehashNeeded)
             {
                 user.Password = _passwordHasher.HashPassword(user, model.Password);
                 await _context.SaveChangesAsync();
