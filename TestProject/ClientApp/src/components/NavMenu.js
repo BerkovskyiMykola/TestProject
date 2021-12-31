@@ -1,49 +1,75 @@
-import React, { Component } from 'react';
-import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
+import React,{ useState }  from 'react';
+import { Collapse, Container, DropdownItem, DropdownMenu, DropdownToggle, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink, UncontrolledDropdown } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import './NavMenu.css';
+import { useTranslation } from "react-i18next";
 
-export class NavMenu extends Component {
-  static displayName = NavMenu.name;
+const NavMenu = (props) => {
+    const { t, i18n } = useTranslation();
+    const [collapsed, setCollapsed] = useState(false);
+    const [user] = useState(null);
 
-  constructor (props) {
-    super(props);
+    const logOut = (e) => {
+        e.preventDefault();
+    }
 
-    this.toggleNavbar = this.toggleNavbar.bind(this);
-    this.state = {
-      collapsed: true
-    };
-  }
-
-  toggleNavbar () {
-    this.setState({
-      collapsed: !this.state.collapsed
-    });
-  }
-
-  render () {
     return (
-      <header>
-        <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
-          <Container>
-            <NavbarBrand tag={Link} to="/">TestProject</NavbarBrand>
-            <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
-            <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
-              <ul className="navbar-nav flex-grow">
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/counter">Counter</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/fetch-data">Fetch data</NavLink>
-                </NavItem>
-              </ul>
-            </Collapse>
-          </Container>
-        </Navbar>
-      </header>
+        <header>
+            <Navbar
+                color="dark"
+                dark
+                light
+                className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3"
+            >
+                <Container>
+                    <NavbarBrand tag={Link} to="/">TestProject</NavbarBrand>
+                <NavbarToggler onClick={() => setCollapsed(!collapsed)} className="mr-2" />
+                <Collapse isOpen={collapsed} navbar>
+                    <Nav className="me-auto" navbar>
+                        <UncontrolledDropdown nav inNavbar>
+                            <DropdownToggle nav caret>
+                                {i18n.language.toUpperCase()}
+                            </DropdownToggle>
+                            <DropdownMenu right>
+                                <DropdownItem onClick={() => i18n.changeLanguage("ua")}>
+                                    UA
+                                </DropdownItem>
+                                <DropdownItem onClick={() => i18n.changeLanguage("en")}>
+                                    EN
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
+                    </Nav>
+                    <Nav className="d-flex" navbar>
+                        {user ? (
+                            <><NavItem>
+                                <NavLink tag={Link} to="/profile">{t("Profile")}</NavLink>
+                            </NavItem>
+                                {user.role === "Admin" &&
+                                    <NavItem>
+                                        <NavLink tag={Link} to="/users">{t("Users")}</NavLink>
+                                    </NavItem>
+                                }
+                                <li className="nav-item">
+                                    <a href="/login" className="nav-link" onClick={logOut}>
+                                        {t("LogOut")}
+                                    </a>
+                                </li></>
+                        ) : (
+                            <>
+                                <NavItem>
+                                    <NavLink tag={Link} to="/login">{t("Login")}</NavLink>
+                                </NavItem>
+                                <NavItem>
+                                    <NavLink tag={Link} to="/register">{t("SignUp")}</NavLink>
+                                </NavItem>
+                            </>
+                        )}
+                    </Nav>
+                </Collapse>
+                </Container>
+            </Navbar>
+        </header>
     );
-  }
 }
+
+export default NavMenu;
