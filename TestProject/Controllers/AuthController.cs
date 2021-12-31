@@ -48,7 +48,11 @@ namespace TestProject.Controllers
 
             var token = _jwtService.GetToken(new JwtUser { UserId = newUser.Id.ToString(), Role = newUser.Role!.Name });
 
-            return Ok(new { token, UserId = newUser.Id, Role = newUser.Role.Name });
+            return Ok(new { 
+                token, 
+                UserId = newUser.Id, 
+                Role = newUser.Role.Name
+            });
         }
 
         [HttpPost("login")]
@@ -75,14 +79,12 @@ namespace TestProject.Controllers
 
             var token = _jwtService.GetToken(new JwtUser { UserId = user.Id.ToString(), Role = user.Role!.Name });
 
-            var response = new
+            return Ok(new
             {
-                Token = token,
+                token,
                 Role = user.Role!.Name,
                 UserId = user.Id
-            };
-
-            return Ok(response);
+            });
         }
     }
 }
