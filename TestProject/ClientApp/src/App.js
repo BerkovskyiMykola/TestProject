@@ -4,7 +4,7 @@ import { Route } from 'react-router';
 import { history } from './utils/history';
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
-import { Router } from 'react-router-dom';
+import { Redirect, Router } from 'react-router-dom';
 import EventBus from "./common/EventBus";
 import Layout from './components/Layout';
 import Home from './components/Home';
@@ -38,7 +38,8 @@ const App = () => {
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/register" component={Register} />
                 <PrivateRoute exact path="/profile" component={Profile} />
-                <Route component={NotFound} />
+                <Route path="/404" component={NotFound} />
+                <Redirect to="/404" />
             </Layout>
         </Router>
     );

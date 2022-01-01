@@ -17,10 +17,9 @@ export default function Profile(props) {
 
     const [model, setModel] = useState({ lastname: "", firstname: "" });
 
-    const { profile, message,user } = useSelector(state => ({
+    const { profile, message } = useSelector(state => ({
         profile: state.profile.profile,
-        message: state.message.message,
-        user: state.auth.user
+        message: state.message.message
     }), shallowEqual)
 
     useEffect(() => {
@@ -30,7 +29,7 @@ export default function Profile(props) {
     }, [dispatch, props.history])
 
     const editRecord = () => {
-        dispatch(editProfile(user.userId, model.lastname, model.firstname))
+        dispatch(editProfile(model.lastname, model.firstname))
             .then(() => {
                 setModalEdit(false);
                 dispatch(clearMessage());
@@ -42,14 +41,14 @@ export default function Profile(props) {
         <Container>
             <Jumbotron className="bg-dark text-white">
                 <Row>
-                    <Col className="text-left">
+                    <Col sm="10" className="text-left">
                         <h3>
                             <strong>{t("Profile")}: {profile.lastname} {profile.firstname}</strong>
                         </h3>
                     </Col>
-                    <Col className="text-right">
-                        <Button onClick={() => { dispatch(clearMessage()); setModalEdit(true); setModel(profile); }}>
-                            <i class="bi-pencil-square" />
+                    <Col sm="2" className="text-right">
+                        <Button color="success" onClick={() => { dispatch(clearMessage()); setModalEdit(true); setModel(profile); }}>
+                            <i className="bi-pencil-square" />
                         </Button>
                     </Col>
                 </Row>
