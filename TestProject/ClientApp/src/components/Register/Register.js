@@ -51,7 +51,7 @@ export default function Register(props) {
                             setValue={(e) => { setModel({ ...model, "firstname": e.target.value }) }} validations={[validateRequired(t), validateField(t)]} />
                         <Field name="lastname" value={model}
                             setValue={(e) => { setModel({ ...model, "lastname": e.target.value }) }} validations={[validateRequired(t), validateField(t)]} />
-                        <Field name="password" value={model}
+                        <Field name="password" value={model} type="password"
                             setValue={(e) => { setModel({ ...model, "password": e.target.value }) }} validations={[validateRequired(t), validatePassword(t)]} />
 
                         <div className="form-group">

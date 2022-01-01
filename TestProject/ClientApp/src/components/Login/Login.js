@@ -46,7 +46,7 @@ export default function Login(props) {
                     <div>
                         <Field name="email" value={model}
                             setValue={(e) => { setModel({ ...model, "email": e.target.value }) }} validations={[validateRequired(t), validateEmail(t)]} />
-                        <Field name="password" value={model}
+                        <Field name="password" value={model} type="password"
                             setValue={(e) => { setModel({ ...model, "password": e.target.value}) }} validations={[validateRequired(t), validatePassword(t)]} />
 
                         <div className="form-group">
