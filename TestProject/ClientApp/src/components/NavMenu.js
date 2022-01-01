@@ -2,14 +2,22 @@ import React,{ useState }  from 'react';
 import { Collapse, Container, DropdownItem, DropdownMenu, DropdownToggle, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink, UncontrolledDropdown } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
+import { shallowEqual, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { logout } from '../actions/auth';
 
-const NavMenu = (props) => {
+const NavMenu = () => {
     const { t, i18n } = useTranslation();
     const [collapsed, setCollapsed] = useState(false);
-    const [user] = useState(null);
+    const dispatch = useDispatch();
+
+    const { user } = useSelector(state => ({
+        user: state.auth.user,
+    }), shallowEqual)
 
     const logOut = (e) => {
         e.preventDefault();
+        dispatch(logout());
     }
 
     return (
