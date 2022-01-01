@@ -2,8 +2,7 @@ import React from 'react';
 import Input from "react-validation/build/input";
 import { useTranslation } from "react-i18next";
 
-const Field = ({ name, value, setValue, validations, type = "text", min }) => {
-
+const Field = ({ name, value, setValue, validations, type = "text", placeholder, minlength, maxlength, required }) => {
     const { t } = useTranslation();
 
     return (
@@ -14,9 +13,12 @@ const Field = ({ name, value, setValue, validations, type = "text", min }) => {
                 className="form-control"
                 name={name}
                 value={value[name]}
-                min={min}
+                placeholder={placeholder}
                 onChange={setValue}
                 validations={validations}
+                minlength={minlength}
+                maxlength={maxlength}
+                required={required}
             />
         </div>
     );

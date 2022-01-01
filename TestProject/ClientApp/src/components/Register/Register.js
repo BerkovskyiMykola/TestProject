@@ -8,7 +8,7 @@ import { register } from "../../actions/auth";
 import { validateRequired, validateEmail, validateField, validatePassword } from "../../validation/validation";
 import { Field, Form } from "../FormComponents";
 
-export default function Register(props) {
+export default function Register() {
     const { t } = useTranslation();
     const [model, setModel] = useState({ firstname: "", lastname: "", email: "", password: "" });
     const [form, setForm] = useState(null);
@@ -45,14 +45,14 @@ export default function Register(props) {
                 <Form handleSubmit={handleRegister} setForm={(c) => { setForm(c); }}
                     message={message} setCheckBtn={(c) => { setCheckBtn(c); }} >
                     <div>
-                        <Field name="email" value={model}
-                            setValue={(e) => { setModel({ ...model, "email": e.target.value }) }} validations={[validateRequired(t), validateEmail(t)]} />
-                        <Field name="firstname" value={model}
-                            setValue={(e) => { setModel({ ...model, "firstname": e.target.value }) }} validations={[validateRequired(t), validateField(t)]} />
-                        <Field name="lastname" value={model}
-                            setValue={(e) => { setModel({ ...model, "lastname": e.target.value }) }} validations={[validateRequired(t), validateField(t)]} />
-                        <Field name="password" value={model} type="password"
-                            setValue={(e) => { setModel({ ...model, "password": e.target.value }) }} validations={[validateRequired(t), validatePassword(t)]} />
+                        <Field name="email" value={model} placeholder="example@example.com" required
+                            setValue={(e) => { setModel({ ...model, "email": e.target.value }) }} validations={[validateEmail(t)]} />
+                        <Field name="firstname" value={model} required
+                            setValue={(e) => { setModel({ ...model, "firstname": e.target.value }) }} validations={[validateField(t)]} />
+                        <Field name="lastname" value={model} required
+                            setValue={(e) => { setModel({ ...model, "lastname": e.target.value }) }} validations={[validateField(t)]} />
+                        <Field name="password" value={model} type="password" required
+                            setValue={(e) => { setModel({ ...model, "password": e.target.value }) }} validations={[validatePassword(t)]} />
 
                         <div className="form-group">
                             <button className="btn btn-primary btn-block">{t("SignUp")}</button>

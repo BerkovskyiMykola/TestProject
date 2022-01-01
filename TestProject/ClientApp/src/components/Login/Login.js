@@ -3,13 +3,13 @@ import { useTranslation } from "react-i18next";
 
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
+import { Button } from "reactstrap";
 import { login } from "../../actions/auth";
 
 import { validateRequired, validateEmail, validatePassword } from "../../validation/validation";
 import { Field, Form } from "../FormComponents";
 
-export default function Login(props) {
-
+export default function Login() {
     const { t } = useTranslation();
     const [model, setModel] = useState({ email: "", password: ""});
     const [form, setForm] = useState(null);
@@ -41,16 +41,15 @@ export default function Login(props) {
     return (
         <div className="col-md-12">
             <div className="card card-container">
-                <Form handleSubmit={handleLogin} setForm={setForm}
-                    message={message} setCheckBtn={setCheckBtn} >
+                <Form handleSubmit={handleLogin} setForm={setForm} message={message} setCheckBtn={setCheckBtn} >
                     <div>
-                        <Field name="email" value={model}
+                        <Field name="email" value={model} placeholder="example@example.com"
                             setValue={(e) => { setModel({ ...model, "email": e.target.value }) }} validations={[validateRequired(t), validateEmail(t)]} />
                         <Field name="password" value={model} type="password"
                             setValue={(e) => { setModel({ ...model, "password": e.target.value}) }} validations={[validateRequired(t), validatePassword(t)]} />
 
                         <div className="form-group">
-                            <button className="btn btn-primary btn-block">{t("Login")}</button>
+                            <Button block color="primary">{t("Login")}</Button>
                         </div>
                     </div>
                 </Form>
