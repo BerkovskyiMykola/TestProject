@@ -4,6 +4,7 @@ import { CURRENT_DOMAIN } from "../utils/domain";
 const API_URL = CURRENT_DOMAIN + "/Auth/";
 
 class AuthService {
+
     login(email, password) {
         return axios
             .post(API_URL + "login", { email, password })
