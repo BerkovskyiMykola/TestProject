@@ -14,6 +14,7 @@ import {
     Input,
     Label
 } from 'reactstrap';
+import handleChange from "../../utils/handleChange";
 
 export default function Login() {
     const { t } = useTranslation();
@@ -26,14 +27,6 @@ export default function Login() {
         message: state.message.message,
         isLoggedIn: state.auth.isLoggedIn
     }), shallowEqual)
-
-    const handleChange = (event) => {
-        const { target } = event;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const { name } = target;
-
-        setModel({ ...model, [name]: value })
-    };
 
     const validateEmail = (event) => {
         const emailRex =
@@ -71,7 +64,7 @@ export default function Login() {
                             value={model.email}
                             onChange={(e) => {
                                 validateEmail(e);
-                                handleChange(e);
+                                handleChange(model, setModel)(e);
                             }}
                         />
                         <FormFeedback>
@@ -90,7 +83,7 @@ export default function Login() {
                             id="password"
                             placeholder="********"
                             value={model.password}
-                            onChange={handleChange}
+                            onChange={handleChange(model, setModel)}
                             minLength={8}
                             maxLength={18}
                         />

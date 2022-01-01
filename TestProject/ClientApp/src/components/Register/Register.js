@@ -13,6 +13,7 @@ import {
     Label
 } from 'reactstrap';
 import { Form } from "../FormComponents";
+import handleChange from "../../utils/handleChange";
 
 export default function Register() {
     const { t } = useTranslation();
@@ -25,14 +26,6 @@ export default function Register() {
         message: state.message.message,
         isLoggedIn: state.auth.isLoggedIn
     }), shallowEqual)
-
-    const handleChange = (event) => {
-        const { target } = event;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const { name } = target;
-
-        setModel({ ...model, [name]: value })
-    };
 
     const validateEmail = (event) => {
         const emailRex =
@@ -70,7 +63,7 @@ export default function Register() {
                             value={model.email}
                             onChange={(e) => {
                                 validateEmail(e);
-                                handleChange(e);
+                                handleChange(model, setModel)(e);
                             }}
                         />
                         <FormFeedback>
@@ -89,7 +82,7 @@ export default function Register() {
                             id="firstname"
                             required
                             value={model.firstname}
-                            onChange={handleChange}
+                            onChange={handleChange(model, setModel)}
                             minLength={2}
                             maxLength={30}
                         />
@@ -102,7 +95,7 @@ export default function Register() {
                             id="lastname"
                             required
                             value={model.lastname}
-                            onChange={handleChange}
+                            onChange={handleChange(model, setModel)}
                             minLength={2}
                             maxLength={30}
                         />
@@ -115,7 +108,7 @@ export default function Register() {
                             id="password"
                             placeholder="********"
                             value={model.password}
-                            onChange={handleChange}
+                            onChange={handleChange(model, setModel)}
                             minLength={8}
                             maxLength={18}
                         />

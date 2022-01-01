@@ -16,6 +16,7 @@ import {
     Input,
     Label
 } from 'reactstrap';
+import handleChange from "../../utils/handleChange";
 
 export default function Profile(props) {
     const { t } = useTranslation();
@@ -35,14 +36,6 @@ export default function Profile(props) {
             .then(() => { })
             .catch(() => { props.history.push("/404") });
     }, [dispatch, props.history])
-
-    const handleChange = (event) => {
-        const { target } = event;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const { name } = target;
-
-        setModel({ ...model, [name]: value })
-    };
 
     const editRecord = () => {
         dispatch(editProfile(model.lastname, model.firstname))
@@ -86,7 +79,7 @@ export default function Profile(props) {
                         id="firstname"
                         required
                         value={model.firstname}
-                        onChange={handleChange}
+                        onChange={handleChange(model, setModel)}
                         minLength={2}
                         maxLength={30}
                     />
@@ -99,7 +92,7 @@ export default function Profile(props) {
                         id="lastname"
                         required
                         value={model.lastname}
-                        onChange={handleChange}
+                        onChange={handleChange(model, setModel)}
                         minLength={2}
                         maxLength={30}
                     />
