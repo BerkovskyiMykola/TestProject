@@ -28,15 +28,15 @@ i18n.use(LanguageDetector).init({
                 Profile: "Profile",
 
                 "This field is required!": "This field is required!",
-                "This is not a valid email. Example: example@example.com": "This is not a valid email.",
-                "The field must be between 2 and 30 characters.": "The field must be between 2 and 30 characters.",
-                "The password must be between 8 and 18 characters.": "The password must be between 8 and 18 characters.",
+                "This is not a valid email": "This is not a valid email",
+                "The field must be between 2 and 30 characters": "The field must be between 2 and 30 characters",
+                "The password must be between 8 and 18 characters": "The password must be between 8 and 18 characters",
 
                 "Bad Request": "Bad Request",
                 "Not Found": "Not Found",
                 "User with such Email exists": "User with such Email exists",
                 "Email or password is incorrect": "Email or password is incorrect",
-                "One or more validation errors occurred.": "One or more validation errors occurred.",
+                "One or more validation errors occurred.": "One or more validation errors occurred",
             }
         },
         ua: {
@@ -63,15 +63,15 @@ i18n.use(LanguageDetector).init({
                 Profile: "Профіль",
 
                 "This field is required!": "Це поле необхідне!",
-                "This is not a valid email. Example: example@example.com": "Це не валідна пошта.",
-                "The field must be between 2 and 30 characters.": "Поле має містити від 2 до 30 символів.",
-                "The password must be between 8 and 18 characters.": "Пароль має містити від 8 до 18 символів.",
+                "This is not a valid email": "Це не валідна пошта",
+                "The field must be between 2 and 30 characters": "Поле має містити від 2 до 30 символів",
+                "The password must be between 8 and 18 characters": "Пароль має містити від 8 до 18 символів",
 
                 "Bad Request": "Поганий запит",
                 "Not Found": "Не знайдено",
-                "User with such Email exists": "Користувач із такою електронною поштою існує",
+                "User with such Email exists": "Користувач з такою електронною поштою існує",
                 "Email or password is incorrect": "Електронна адреса або пароль неправильні",
-                "One or more validation errors occurred.": "Сталася одна чи кілька помилок перевірки.",
+                "One or more validation errors occurred.": "Сталася одна чи кілька помилок перевірки",
             }
         }
     },
