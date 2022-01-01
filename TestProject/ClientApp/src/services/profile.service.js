@@ -1,4 +1,4 @@
-﻿import axios from "axios";
+import axios from "axios";
 import { CURRENT_DOMAIN } from "../utils/domain";
 import authHeader from "./auth-header";
 

@@ -1,5 +1,5 @@
 import React,{ useState }  from 'react';
-import { Collapse, Container, DropdownItem, DropdownMenu, DropdownToggle, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink, UncontrolledDropdown } from 'reactstrap';
+import { Collapse, DropdownItem, DropdownMenu, DropdownToggle, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink, UncontrolledDropdown } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import { shallowEqual, useDispatch } from 'react-redux';
@@ -25,56 +25,56 @@ const NavMenu = () => {
             <Navbar
                 color="dark"
                 dark
+                expand="md"
                 light
-                className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3"
             >
-                <Container>
-                    <NavbarBrand tag={Link} to="/">TestProject</NavbarBrand>
-                    <NavbarToggler onClick={() => setCollapsed(!collapsed)} className="mr-2" />
-                    <Collapse isOpen={collapsed} navbar>
-                        <Nav className="me-auto" navbar>
-                            <UncontrolledDropdown nav inNavbar>
-                                <DropdownToggle nav caret>
-                                    {i18n.language.toUpperCase()}
-                                </DropdownToggle>
-                                <DropdownMenu right>
-                                    <DropdownItem onClick={() => i18n.changeLanguage("ua")}>
-                                        UA
-                                    </DropdownItem>
-                                    <DropdownItem onClick={() => i18n.changeLanguage("en")}>
-                                        EN
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </UncontrolledDropdown>
-                        </Nav>
-                        <Nav className="d-flex" navbar>
-                            {user ? (
-                                <><NavItem>
+                <NavbarBrand tag={Link} to="/">TestProject</NavbarBrand>
+                <NavbarToggler onClick={() => setCollapsed(!collapsed)} />
+                <Collapse isOpen={collapsed} navbar>
+                    <Nav className="mr-auto" navbar>
+                        <UncontrolledDropdown nav inNavbar>
+                            <DropdownToggle nav caret>
+                                {i18n.language.toUpperCase()}
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                <DropdownItem onClick={() => i18n.changeLanguage("ua")}>
+                                    UA
+                                </DropdownItem>
+                                <DropdownItem onClick={() => i18n.changeLanguage("en")}>
+                                    EN
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
+                    </Nav>
+                    <Nav className="ml-auto" navbar>
+                        {user ? (
+                            <>
+                                <NavItem>
                                     <NavLink tag={Link} to="/profile">{t("Profile")}</NavLink>
                                 </NavItem>
-                                    {user.role === "Admin" &&
-                                        <NavItem>
-                                            <NavLink tag={Link} to="/users">{t("Users")}</NavLink>
-                                        </NavItem>
-                                    }
-                                    <li className="nav-item">
-                                        <a href="/login" className="nav-link" onClick={logOut}>
-                                            {t("LogOut")}
-                                        </a>
-                                    </li></>
-                            ) : (
-                                <>
+                                {user.role === "Admin" &&
                                     <NavItem>
-                                        <NavLink tag={Link} to="/login">{t("Login")}</NavLink>
+                                        <NavLink tag={Link} to="/users">{t("Users")}</NavLink>
                                     </NavItem>
-                                    <NavItem>
-                                        <NavLink tag={Link} to="/register">{t("SignUp")}</NavLink>
-                                    </NavItem>
-                                </>
-                            )}
-                        </Nav>
-                    </Collapse>
-                </Container>
+                                }
+                                <li className="nav-item">
+                                    <a href="/login" className="nav-link" onClick={logOut}>
+                                        {t("LogOut")}
+                                    </a>
+                                </li>
+                            </>
+                        ) : (
+                            <>
+                                <NavItem>
+                                    <NavLink tag={Link} to="/login">{t("Login")}</NavLink>
+                                </NavItem>
+                                <NavItem>
+                                    <NavLink tag={Link} to="/register">{t("SignUp")}</NavLink>
+                                </NavItem>
+                            </>
+                        )}
+                    </Nav>
+                </Collapse>
             </Navbar>
         </header>
     );

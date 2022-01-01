@@ -1,4 +1,4 @@
-﻿import axios from "axios";
+import axios from "axios";
 import { CURRENT_DOMAIN } from "../utils/domain";
 
 const API_URL = CURRENT_DOMAIN + "/Auth/";

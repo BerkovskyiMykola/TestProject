@@ -1,4 +1,4 @@
-﻿import { SET_MESSAGE, CLEAR_MESSAGE } from "../constants/message";
+import { SET_MESSAGE, CLEAR_MESSAGE } from "../constants/message";
 
 export const setMessage = (message) => ({
     type: SET_MESSAGE,

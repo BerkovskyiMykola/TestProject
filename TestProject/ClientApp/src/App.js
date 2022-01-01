@@ -8,6 +8,11 @@ import { Router } from 'react-router-dom';
 import EventBus from "./common/EventBus";
 import Layout from './components/Layout';
 import Home from './components/Home';
+import Login from "./components/Login";
+import Register from "./components/Register";
+import Profile from "./components/Profile";
+import NotFound from "./components/NotFound";
+import { PrivateRoute } from "./components/PrivateRoute/PrivateRoute";
 
 import './App.css'
 
@@ -29,7 +34,11 @@ const App = () => {
     return (
         <Router history={history}>
             <Layout>
-                <Route exact path='/' component={Home} />
+                <Route exact path={["/", "/home"]} component={Home} />
+                <Route exact path="/login" component={Login} />
+                <Route exact path="/register" component={Register} />
+                <PrivateRoute exact path="/profile" component={Profile} />
+                <Route component={NotFound} />
             </Layout>
         </Router>
     );

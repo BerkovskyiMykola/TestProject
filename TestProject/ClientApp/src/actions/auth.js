@@ -1,4 +1,4 @@
-﻿import { REGISTER_SUCCESS, REGISTER_FAIL } from "../constants/register";
+import { REGISTER_SUCCESS, REGISTER_FAIL } from "../constants/register";
 import { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT } from "../constants/login";
 import { SET_MESSAGE } from "../constants/message";
 

@@ -1,4 +1,4 @@
-﻿import EventBus from "../common/EventBus";
+import EventBus from "../common/EventBus";
 import { SET_MESSAGE } from "../constants/message";
 import { EDIT_PROFILE_SUCCESS, GET_PROFILE_INFO_ERROR, GET_PROFILE_INFO_SUCCESS } from "../constants/profile";
 import profileService from "../services/profile.service";

@@ -9,9 +9,22 @@ using TestProject.Services.Authorization;
 using TestProject.Services.Authorization.Settings;
 using TestProject.Services.Mail;
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(MyAllowSpecificOrigins,
+                          builder =>
+                          {
+                              builder.WithOrigins("https://localhost:44449")
+                                                  .AllowAnyHeader()
+                                                  .AllowAnyMethod();
+                          });
+});
 
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -83,6 +96,8 @@ else
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthentication();
 app.UseAuthorization();

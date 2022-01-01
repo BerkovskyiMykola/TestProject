@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import { isEmail } from "validator";
 
 export const validateRequired = (t) => (value) => {

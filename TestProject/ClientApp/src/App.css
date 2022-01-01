@@ -30,3 +30,16 @@ label {
     -webkit-border-radius: 50%;
     border-radius: 50%;
 }
+
+.Center {
+    font-size: 100px;
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
