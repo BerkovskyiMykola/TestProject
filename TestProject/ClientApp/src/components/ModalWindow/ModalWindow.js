@@ -1,34 +1,24 @@
-import React, { useState } from 'react';
-import { Modal, ModalHeader, ModalBody } from "reactstrap";
+import React from 'react';
+import { Modal, ModalHeader, ModalBody, FormGroup, Button } from "reactstrap";
 import { Form } from '../FormComponents';
 
 
 const ModalWindow = ({ modal, deactiveModal, message, children, textHeader, textButton, method }) => {
 
-    const [form, setForm] = useState(null);
-    const [checkBtn, setCheckBtn] = useState(null);
-
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        form.validateAll();
-
-        if (checkBtn.context._errors.length === 0) {
-            method();
-        }
-
+        method();
     }
 
     return (
         <Modal isOpen={modal} toggle={deactiveModal}>
             <ModalHeader toggle={deactiveModal} >{textHeader}</ModalHeader>
             <ModalBody>
-                <Form handleSubmit={handleSubmit} setForm={setForm}
-                    message={message} setCheckBtn={setCheckBtn}>
+                <Form handleSubmit={handleSubmit} message={message}>
                     {children}
-                    <div className="form-group">
-                        <button className="btn btn-primary btn-block">{textButton}</button>
-                    </div>
+                    <FormGroup>
+                        <Button block color="primary">{textButton}</Button>
+                    </FormGroup>
                 </Form>
             </ModalBody>
         </Modal>

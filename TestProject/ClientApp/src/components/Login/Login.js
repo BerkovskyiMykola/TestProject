@@ -3,17 +3,22 @@ import { useTranslation } from "react-i18next";
 
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { Button } from "reactstrap";
 import { login } from "../../actions/auth";
 
-import { validateRequired, validateEmail, validatePassword } from "../../validation/validation";
-import { Field, Form } from "../FormComponents";
+import { Form } from "../FormComponents";
+
+import {
+    Button,
+    FormFeedback,
+    FormGroup,
+    Input,
+    Label
+} from 'reactstrap';
 
 export default function Login() {
     const { t } = useTranslation();
-    const [model, setModel] = useState({ email: "", password: ""});
-    const [form, setForm] = useState(null);
-    const [checkBtn, setCheckBtn] = useState(null);
+    const [model, setModel] = useState({ email: "", password: "" });
+    const [validate, setValidate] = useState({ email: '' });
 
     const dispatch = useDispatch();
 
@@ -22,16 +27,27 @@ export default function Login() {
         isLoggedIn: state.auth.isLoggedIn
     }), shallowEqual)
 
-    const handleLogin = (e) => {
+    const handleChange = (event) => {
+        const { target } = event;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const { name } = target;
+
+        setModel({ ...model, [name]: value })
+    };
+
+    const validateEmail = (event) => {
+        const emailRex =
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+        setValidate({ ...validate, email: emailRex.test(event.target.value) ? 'has-success' : 'has-danger' })
+    }
+
+    const submitForm = (e) => {
         e.preventDefault();
 
-        form.validateAll();
-
-        if (checkBtn.context._errors.length === 0) {
-            dispatch(login(model.email, model.password))
-                .then(() => {  })
-                .catch(() => {  });
-        }
+        dispatch(login(model.email, model.password))
+            .then(() => { })
+            .catch(() => { });
     }
 
     if (isLoggedIn) {
@@ -41,17 +57,47 @@ export default function Login() {
     return (
         <div className="col-md-12">
             <div className="card card-container">
-                <Form handleSubmit={handleLogin} setForm={setForm} message={message} setCheckBtn={setCheckBtn} >
-                    <div>
-                        <Field name="email" value={model} placeholder="example@example.com"
-                            setValue={(e) => { setModel({ ...model, "email": e.target.value }) }} validations={[validateRequired(t), validateEmail(t)]} />
-                        <Field name="password" value={model} type="password"
-                            setValue={(e) => { setModel({ ...model, "password": e.target.value}) }} validations={[validateRequired(t), validatePassword(t)]} />
-
-                        <div className="form-group">
-                            <Button block color="primary">{t("Login")}</Button>
-                        </div>
-                    </div>
+                <Form handleSubmit={submitForm} message={message}>
+                    <FormGroup>
+                        <Label for="email">{t("email")}</Label>
+                        <Input
+                            type="email"
+                            name="email"
+                            id="email"
+                            placeholder="example@example.com"
+                            required
+                            valid={validate.email === "has-success"}
+                            invalid={validate.email === "has-danger"}
+                            value={model.email}
+                            onChange={(e) => {
+                                validateEmail(e);
+                                handleChange(e);
+                            }}
+                        />
+                        <FormFeedback>
+                            Uh oh! Looks like there is an issue with your email. Please input
+                            a correct email.
+                        </FormFeedback>
+                        <FormFeedback valid>
+                            That's a tasty looking email you've got there.
+                        </FormFeedback>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="password">{t("password")}</Label>
+                        <Input
+                            type="password"
+                            name="password"
+                            id="password"
+                            placeholder="********"
+                            value={model.password}
+                            onChange={handleChange}
+                            minLength={8}
+                            maxLength={18}
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <Button block color="primary">{t("Login")}</Button>
+                    </FormGroup>
                 </Form>
             </div>
         </div>

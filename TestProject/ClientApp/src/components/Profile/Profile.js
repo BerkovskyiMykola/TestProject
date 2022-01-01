@@ -4,10 +4,18 @@ import { useTranslation } from "react-i18next";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { clearMessage } from "../../actions/message";
 import { editProfile, getProfile } from "../../actions/profile";
-import { validateField, validateRequired } from "../../validation/validation";
-import { Field } from "../FormComponents";
 import ModalWindow from "../ModalWindow/ModalWindow";
-import { Row, Button, Col, Container, Jumbotron } from "reactstrap";
+
+import {
+    Row,
+    Col,
+    Container,
+    Button,
+    Jumbotron,
+    FormGroup,
+    Input,
+    Label
+} from 'reactstrap';
 
 export default function Profile(props) {
     const { t } = useTranslation();
@@ -28,6 +36,14 @@ export default function Profile(props) {
             .catch(() => { props.history.push("/404") });
     }, [dispatch, props.history])
 
+    const handleChange = (event) => {
+        const { target } = event;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const { name } = target;
+
+        setModel({ ...model, [name]: value })
+    };
+
     const editRecord = () => {
         dispatch(editProfile(model.lastname, model.firstname))
             .then(() => {
@@ -47,7 +63,7 @@ export default function Profile(props) {
                         </h3>
                     </Col>
                     <Col sm="2" className="text-right">
-                        <Button color="success" onClick={() => { dispatch(clearMessage()); setModalEdit(true); setModel(profile); }}>
+                        <Button color="success" onClick={() => { dispatch(clearMessage()); setModalEdit(true); setModel({ lastname: profile.lastname, firstname: profile.firstname }); }}>
                             <i className="bi-pencil-square" />
                         </Button>
                     </Col>
@@ -62,10 +78,32 @@ export default function Profile(props) {
             <ModalWindow modal={modalEdit} deactiveModal={() => { setModalEdit(false); }} textHeader={t("Edit")}
                 textButton={t("Edit")} method={editRecord} message={message}
             >
-                <Field name="lastname" value={model}
-                    setValue={(e) => { setModel({ ...model, "lastname": e.target.value }) }} validations={[validateRequired(t), validateField(t)]} />
-                <Field name="firstname" value={model}
-                    setValue={(e) => { setModel({ ...model, "firstname": e.target.value }) }} validations={[validateRequired(t), validateField(t)]} />
+                <FormGroup>
+                    <Label for="firstname">{t("firstname")}</Label>
+                    <Input
+                        type="text"
+                        name="firstname"
+                        id="firstname"
+                        required
+                        value={model.firstname}
+                        onChange={handleChange}
+                        minLength={2}
+                        maxLength={30}
+                    />
+                </FormGroup>
+                <FormGroup>
+                    <Label for="lastname">{t("lastname")}</Label>
+                    <Input
+                        type="text"
+                        name="lastname"
+                        id="lastname"
+                        required
+                        value={model.lastname}
+                        onChange={handleChange}
+                        minLength={2}
+                        maxLength={30}
+                    />
+                </FormGroup>
             </ModalWindow>
         </Container>
     );

@@ -1,28 +1,25 @@
 import React from 'react';
-import Form from "react-validation/build/form";
-import CheckButton from "react-validation/build/button";
 import { useTranslation } from 'react-i18next';
 
-const FormComponent = ({ setForm, handleSubmit, children, message, setCheckBtn }) => {
+import {
+    Alert,
+    Form,
+    FormGroup,
+} from 'reactstrap';
+
+const FormComponent = ({ handleSubmit, children, message }) => {
     const { t } = useTranslation();
 
     return (
-        <Form
-            onSubmit={handleSubmit}
-            ref={setForm}
-        >
+        <Form className="form" onSubmit={handleSubmit}>
             {children}
             {message && (
-                <div className="form-group">
-                    <div className="alert alert-danger" role="alert">
+                <FormGroup>
+                    <Alert color="danger" style={{ textAlign: 'center' }} className="mt-2">
                         {t(message)}
-                    </div>
-                </div>
+                    </Alert>
+                </FormGroup>
             )}
-            <CheckButton
-                style={{ display: "none" }}
-                ref={setCheckBtn}
-            />
         </Form>
     );
 }
