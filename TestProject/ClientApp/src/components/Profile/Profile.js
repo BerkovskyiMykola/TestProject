@@ -49,7 +49,7 @@ export default function Profile(props) {
                     </Col>
                     <Col className="text-right">
                         <Button onClick={() => { dispatch(clearMessage()); setModalEdit(true); setModel(profile); }}>
-                            {t("Edit")}
+                            <i class="bi-pencil-square" />
                         </Button>
                     </Col>
                 </Row>
