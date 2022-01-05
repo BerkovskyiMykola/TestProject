@@ -15,10 +15,12 @@ const List = ({ name, records, columns, k, createRecord, refreshRecords, action 
                     <Row>
                         <Col className="text-left"><h3>{t(name)}</h3></Col>
                         <Col className="text-right">
-                            <Button onClick={() => createRecord()} color="success">{t("Create")}</Button>
-                            <Button onClick={() => refreshRecords()}>
-                                <i className="bi-arrow-clockwise" />
-                            </Button>
+                            {createRecord && <Button onClick={() => createRecord()} color="success">{t("Create")}</Button>}
+                            {refreshRecords && 
+                                <Button onClick={() => refreshRecords()}>
+                                    <i className="bi-arrow-clockwise" />
+                                </Button>
+                            }
                         </Col>
                     </Row>
                 </Container>
@@ -37,10 +39,12 @@ const List = ({ name, records, columns, k, createRecord, refreshRecords, action 
                 <Row>
                     <Col className="text-left"><h3>{t(name)}</h3></Col>
                     <Col className="text-right">
-                        <Button onClick={() => createRecord()} color="success">{t("Create")}</Button>
-                        <Button onClick={() => refreshRecords()}>
-                            <i className="bi-arrow-clockwise" />
-                        </Button>
+                        {createRecord && <Button onClick={() => createRecord()} color="success">{t("Create")}</Button>}
+                        {refreshRecords &&
+                            <Button onClick={() => refreshRecords()}>
+                                <i className="bi-arrow-clockwise" />
+                            </Button>
+                        }
                     </Col>
                 </Row>
             </Container>
