@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { login } from "../../actions/auth";
+import { validateEmail } from "../../validation/validation"
 
 import { Form } from "../FormComponents";
 
@@ -27,13 +28,6 @@ export default function Login() {
         message: state.message.message,
         isLoggedIn: state.auth.isLoggedIn
     }), shallowEqual)
-
-    const validateEmail = (event) => {
-        const emailRex =
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-        setValidate({ ...validate, email: emailRex.test(event.target.value) ? 'has-success' : 'has-danger' })
-    }
 
     const submitForm = (e) => {
         e.preventDefault();
@@ -63,7 +57,7 @@ export default function Login() {
                             invalid={validate.email === "has-danger"}
                             value={model.email}
                             onChange={(e) => {
-                                validateEmail(e);
+                                validateEmail(validate, setValidate)(e);
                                 handleChange(model, setModel)(e);
                             }}
                         />
