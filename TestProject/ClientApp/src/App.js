@@ -15,6 +15,7 @@ import NotFound from "./components/NotFound";
 import { PrivateRoute } from "./components/PrivateRoute/PrivateRoute";
 
 import './App.css'
+import Database from './components/Datebase';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -38,6 +39,7 @@ const App = () => {
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/register" component={Register} />
                 <PrivateRoute exact path="/profile" component={Profile} />
+                <PrivateRoute exact path="/database" component={Database} roles={["Admin"]} />
                 <Route path="/404" component={NotFound} />
                 <Redirect to="/404" />
             </Layout>

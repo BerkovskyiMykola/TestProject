@@ -1,6 +1,6 @@
 import React from 'react'
 import {  useTranslation } from 'react-i18next';
-import { Table, Container, Row, Col } from "reactstrap";
+import { Table, Container, Row, Col, Button } from "reactstrap";
 import ListItem from './ListItem';
 
 
@@ -8,7 +8,7 @@ const List = ({ name, records, columns, k, createRecord, refreshRecords, action 
 
     const { t } = useTranslation();
 
-    if (recorts.length === 0) {
+    if (records.length === 0) {
         return (
             <>
                 <Container>
@@ -17,7 +17,7 @@ const List = ({ name, records, columns, k, createRecord, refreshRecords, action 
                         <Col className="text-right">
                             {createRecord && <Button onClick={() => createRecord()} color="success">{t("Create")}</Button>}
                             {refreshRecords && 
-                                <Button onClick={() => refreshRecords()}>
+                                <Button style={{ marginLeft: "3px" }} onClick={() => refreshRecords()}>
                                     <i className="bi-arrow-clockwise" />
                                 </Button>
                             }
@@ -41,7 +41,7 @@ const List = ({ name, records, columns, k, createRecord, refreshRecords, action 
                     <Col className="text-right">
                         {createRecord && <Button onClick={() => createRecord()} color="success">{t("Create")}</Button>}
                         {refreshRecords &&
-                            <Button onClick={() => refreshRecords()}>
+                            <Button style={{ marginLeft: "3px" }} onClick={() => refreshRecords()}>
                                 <i className="bi-arrow-clockwise" />
                             </Button>
                         }
@@ -59,7 +59,7 @@ const List = ({ name, records, columns, k, createRecord, refreshRecords, action 
                     </tr>
                 </thead>
                 <tbody>
-                    {records.map((item, index) => (<ListItem key={item[k]} item={item} index={index} columns={columns} deleteRecord={deleteRecord} editRecord={editRecord} openPage={openPage} action={action} />))}
+                    {records.map((item, index) => (<ListItem key={item[k]} item={item} index={index} columns={columns} action={action(item)} />))}
                 </tbody>
             </Table>
         </>

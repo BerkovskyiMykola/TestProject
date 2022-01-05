@@ -7,12 +7,12 @@ namespace TestProject.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Roles = "Admin")]
-    public class DataBaseController : ControllerBase
+    public class DatabaseController : ControllerBase
     {
         private readonly ApplicationContext _context;
         private readonly string _directoryPath;
 
-        public DataBaseController(ApplicationContext context)
+        public DatabaseController(ApplicationContext context)
         {
             _context = context;
             _directoryPath = $"C:\\{_context.Database.GetDbConnection().Database}_Backups";
@@ -23,7 +23,7 @@ namespace TestProject.Controllers
             }
         }
 
-        [HttpGet("Backups")]
+        [HttpGet("backups")]
         public IActionResult GetBackups()
         {
             DirectoryInfo directory = new DirectoryInfo(_directoryPath);
@@ -59,7 +59,7 @@ namespace TestProject.Controllers
             return NoContent();
         }
 
-        [HttpPut("restore")]
+        [HttpPut("restore/{backupName}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Restore(string backupName)
         {
