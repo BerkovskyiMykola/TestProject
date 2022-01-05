@@ -1,4 +1,4 @@
-﻿export const validateEmail = (validate, setValidate) => (event) => {
+export const validateEmail = (validate, setValidate) => (event) => {
     const { target } = event;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const { name } = target;

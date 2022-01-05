@@ -1,3 +1,4 @@
 import Form from "./Form";
+import { EmailInput, PasswordInput, FieldInput } from "./Fields";
 
-export { Form };
+export { Form, EmailInput, PasswordInput, FieldInput };

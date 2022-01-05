@@ -5,18 +5,15 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { clearMessage } from "../../actions/message";
 import { editProfile, getProfile } from "../../actions/profile";
 import ModalWindow from "../ModalWindow/ModalWindow";
+import { FieldInput } from "../FormComponents";
 
 import {
     Row,
     Col,
     Container,
     Button,
-    Jumbotron,
-    FormGroup,
-    Input,
-    Label
+    Jumbotron
 } from 'reactstrap';
-import handleChange from "../../utils/handleChange";
 
 export default function Profile(props) {
     const { t } = useTranslation();
@@ -71,32 +68,8 @@ export default function Profile(props) {
             <ModalWindow modal={modalEdit} deactiveModal={() => { setModalEdit(false); }} textHeader={t("Edit")}
                 textButton={t("Edit")} method={editRecord} message={message}
             >
-                <FormGroup>
-                    <Label for="firstname">{t("firstname")}</Label>
-                    <Input
-                        type="text"
-                        name="firstname"
-                        id="firstname"
-                        required
-                        value={model.firstname}
-                        onChange={handleChange(model, setModel)}
-                        minLength={2}
-                        maxLength={30}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label for="lastname">{t("lastname")}</Label>
-                    <Input
-                        type="text"
-                        name="lastname"
-                        id="lastname"
-                        required
-                        value={model.lastname}
-                        onChange={handleChange(model, setModel)}
-                        minLength={2}
-                        maxLength={30}
-                    />
-                </FormGroup>
+                <FieldInput name="firstname" model={model} setModel={setModel} minLength={2} maxLength={30} />
+                <FieldInput name="lastname" model={model} setModel={setModel} minLength={2} maxLength={30} />
             </ModalWindow>
         </Container>
     );
