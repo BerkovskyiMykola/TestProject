@@ -1,8 +1,9 @@
 import EventBus from "../common/EventBus";
 import { CREATE_BACKUP_ERROR, CREATE_BACKUP_SUCCESS, DELETE_BACKUP_ERROR, DELETE_BACKUP_SUCCESS, GET_BACKUPS, RESTORE_ERROR, RESTORE_SUCCESS } from "../constants/database";
 import databaseService from "../services/database.service";
+import { toast } from "react-toastify";
 
-export const getBackups = () => (dispatch) => {
+export const getBackups = (t) => (dispatch) => {
     return databaseService.getBackups().then(
         (responce) => {
             dispatch({
@@ -10,42 +11,44 @@ export const getBackups = () => (dispatch) => {
                 payload: { backups: responce.data }
             });
 
-            return Promise.resolve();
+            toast.success(t("LoadSuccess"));
         },
         (error) => {
             if (error.response && error.response.status === 401) {
                 EventBus.dispatch("logout");
             }
-
-            return Promise.reject();
+            else {
+                toast.error(t("Error"));
+            }
         }
     )
 }
 
-export const restore = (backupName) => (dispatch) => {
+export const restore = (backupName, t) => (dispatch) => {
     return databaseService.restore(backupName).then(
         (responce) => {
             dispatch({
                 type: RESTORE_SUCCESS
             });
 
-            return Promise.resolve();
+            toast.success(t("RestorSuccess"));
         },
         (error) => {
             if (error.response && error.response.status === 401) {
                 EventBus.dispatch("logout");
             }
+            else {
+                toast.error(t("Error"));
+            }
 
             dispatch({
                 type: RESTORE_ERROR
             });
-
-            return Promise.reject();
         }
     )
 }
 
-export const createBackup = () => (dispatch) => {
+export const createBackup = (t) => (dispatch) => {
     return databaseService.createBackup().then(
         (responce) => {
             dispatch({
@@ -53,23 +56,24 @@ export const createBackup = () => (dispatch) => {
                 payload: { backupName: responce.data }
             });
 
-            return Promise.resolve();
+            toast.success(t("CreateSuccess"));
         },
         (error) => {
             if (error.response && error.response.status === 401) {
                 EventBus.dispatch("logout");
             }
+            else {
+                toast.error(t("Error"));
+            }
 
             dispatch({
                 type: CREATE_BACKUP_ERROR
             });
-
-            return Promise.reject();
         }
     )
 }
 
-export const deleteBackup = (backupName) => (dispatch) => {
+export const deleteBackup = (backupName, t) => (dispatch) => {
     return databaseService.deleteBackup(backupName).then(
         (responce) => {
             dispatch({
@@ -77,18 +81,19 @@ export const deleteBackup = (backupName) => (dispatch) => {
                 payload: { backupName }
             });
 
-            return Promise.resolve();
+            toast.success(t("DeleteSuccess"));
         },
         (error) => {
             if (error.response && error.response.status === 401) {
                 EventBus.dispatch("logout");
             }
+            else {
+                toast.error(t("Error"));
+            }
 
             dispatch({
                 type: DELETE_BACKUP_ERROR
             });
-
-            return Promise.reject();
         }
     )
 }

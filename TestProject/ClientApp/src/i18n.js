@@ -9,6 +9,12 @@ i18n.use(LanguageDetector).init({
                 Create: "Create",
                 Edit: "Edit",
                 Delete: "Delete",
+                LoadSuccess: "Loaded successfully",
+                Error: "Something went wrong. Please refresh the page",
+                CreateSuccess: "Created successfully",
+                DeleteSuccess: "Deleted successfully",
+                EditSuccess: "Edited successfully",
+                RestorSuccess: "Restored successfully",
                 Actions: "Actions",
                 ListEmpty: "List is empty",
 
@@ -30,7 +36,6 @@ i18n.use(LanguageDetector).init({
                 backupName: "Backup name",
                 database: "Database",
 
-
                 "This field is required!": "This field is required!",
                 "This is not a valid email": "This is not a valid email",
 
@@ -46,6 +51,12 @@ i18n.use(LanguageDetector).init({
                 Create: "Створити",
                 Edit: "Редагувати",
                 Delete: "Видалити",
+                LoadSuccess: "Завантажено успішно",
+                Error: "Щось пішло не так. Будь ласка, оновіть сторінку",
+                CreateSuccess: "Створено успішно",
+                DeleteSuccess: "Видалено успішно",
+                EditSuccess: "Відредаговано успішно",
+                RestorSuccess: "Відновлено успішно",
                 Actions: "Дії",
                 ListEmpty: "Список пустий",
 

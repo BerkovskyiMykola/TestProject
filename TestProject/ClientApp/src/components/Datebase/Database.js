@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react'
+﻿import React, { useEffect } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import List from '../ListComponents/List'
 import { createBackup, deleteBackup, getBackups, restore } from '../../actions/database';
+import { useTranslation } from 'react-i18next';
 
 const Database = () => {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
 
     const { backups } = useSelector(state => ({
@@ -11,46 +13,20 @@ const Database = () => {
     }), shallowEqual)
 
     useEffect(() => {
-        dispatch(getBackups())
-            .then(() => { })
-            .catch(() => { });
-    }, [dispatch])
-
-    const createRecord = () => {
-        dispatch(createBackup())
-            .then(() => { alert("Success") })
-            .catch(() => { })
-    }
-
-    const refreshRecords = () => {
-        dispatch(getBackups())
-            .then(() => { })
-            .catch(() => { })
-    }
-
-    const deleteRecord = (item) => {
-        dispatch(deleteBackup(item.backupName))
-            .then(() => { })
-            .catch(() => { })
-    }
-
-    const restoreDatabase = (item) => {
-        dispatch(restore(item.backupName))
-            .then(() => { alert("Success") })
-            .catch(() => { })
-    }
+        dispatch(getBackups(t))
+    }, [dispatch, t])
 
     const action = (item) => {
         return (
             <td>
                 <button
-                    onClick={() => { restoreDatabase(item) }}
+                    onClick={() => { dispatch(restore(item.backupName, t)) }}
                     style={{ marginRight: "3px"}}
                     className="btn btn-outline-warning btn-sm float-left">
                     <i className="bi-upload" />
                 </button>
                 <button
-                    onClick={() => { deleteRecord(item) }}
+                    onClick={() => { dispatch(deleteBackup(item.backupName, t)) }}
                     className="btn btn-outline-danger btn-sm float-left">
                     <i className="bi-trash" />
                 </button>
@@ -59,7 +35,15 @@ const Database = () => {
     }
 
     return (
-        <List name="backups" records={backups} k="backupName" columns={['backupName']} createRecord={createRecord} refreshRecords={refreshRecords} action={action} />
+        <List
+            name="backups"
+            records={backups}
+            k="backupName"
+            columns={['backupName']}
+            createRecord={() => dispatch(createBackup(t))}
+            refreshRecords={() => dispatch(getBackups(t))}
+            action={action}
+        />
     );
 };
 
