@@ -38,9 +38,16 @@ namespace TestProject.Controllers
         public async Task<IActionResult> PostBackup()
         {
             string dbname = _context.Database.GetDbConnection().Database;
-            var backupName = $"{dbname}_{DateTime.UtcNow:yyyy-MM-dd_hh-mm-ss}";
+            var backupName = $"{DateTime.UtcNow:yyyy-MM-dd_hh-mm-ss}";
+
+            var path = Path.Combine(_directoryPath, backupName + ".bak");
+            if (System.IO.File.Exists(path))
+            {
+                return BadRequest();
+            }
+
             string sqlCommand = $"BACKUP DATABASE {dbname} TO DISK = '{_directoryPath}\\{backupName}.bak'";
-            await _context.Database.ExecuteSqlRawAsync(sqlCommand);
+            var a = await _context.Database.ExecuteSqlRawAsync(sqlCommand);
             return Ok(new { BackupName = backupName });
         }
 
@@ -54,7 +61,14 @@ namespace TestProject.Controllers
                 return BadRequest();
             }
 
-            System.IO.File.Delete(path);
+            try
+            {
+                System.IO.File.Delete(path);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
 
             return NoContent();
         }
