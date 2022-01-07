@@ -59,7 +59,7 @@ const List = ({ name, records, columns, k, createRecord, refreshRecords, action 
                     </tr>
                 </thead>
                 <tbody>
-                    {records.map((item, index) => (<ListItem key={item[k]} item={item} index={index} columns={columns} action={action(item)} />))}
+                    {records.map((item, index) => (<ListItem key={item[k]} item={item} index={index} columns={columns} action={action && action(item)} />))}
                 </tbody>
             </Table>
         </>
