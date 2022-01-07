@@ -84,3 +84,25 @@ export const FieldInput = ({ name, model, setModel, minLength, maxLength, requir
         </FormGroup>
     );
 }
+
+export const SelectInput = ({ name, id, value, records, model, setModel, required = true }) => {
+
+    const { t } = useTranslation();
+
+    return (
+        <FormGroup>
+            <Label for={name}>{t(name)}</Label>
+            <Input
+                type="select"
+                name={name}
+                id={name}
+                required={required}
+                value={model[name]}
+                onChange={handleChange(model, setModel)}
+            >
+                <option value="">{t("defaultOption")}</option>
+                {records.map(x => <option key={x[id]} value={x[id]}>{x[value]}</option>)}
+            </Input>
+        </FormGroup>
+    );
+}
