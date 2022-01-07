@@ -27,8 +27,6 @@ export default function Register() {
         e.preventDefault();
 
         dispatch(register(model.lastname, model.firstname, model.email, model.password))
-            .then(() => { })
-            .catch(() => { });
     }
 
     if (isLoggedIn) {

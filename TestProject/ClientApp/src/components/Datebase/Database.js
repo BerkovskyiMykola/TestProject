@@ -1,4 +1,4 @@
-﻿import React, { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import List from '../ListComponents/List'
 import { createBackup, deleteBackup, getBackups, restore } from '../../actions/database';

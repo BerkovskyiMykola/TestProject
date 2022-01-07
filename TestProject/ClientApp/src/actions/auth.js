@@ -15,8 +15,6 @@ export const register = (lastname, firstname, email, password) => (dispatch) => 
                 type: LOGIN_SUCCESS,
                 payload: { user: data },
             });
-
-            return Promise.resolve();
         },
         (error) => {
             const message = error.response.data.title || error.response.data;
@@ -29,8 +27,6 @@ export const register = (lastname, firstname, email, password) => (dispatch) => 
                 type: SET_MESSAGE,
                 payload: message,
             });
-
-            return Promise.reject();
         }
     );
 };
@@ -42,8 +38,6 @@ export const login = (login, password) => (dispatch) => {
                 type: LOGIN_SUCCESS,
                 payload: { user: data },
             });
-
-            return Promise.resolve();
         },
         (error) => {
             const message = error.response.data.title || error.response.data;
@@ -56,8 +50,6 @@ export const login = (login, password) => (dispatch) => {
                 type: SET_MESSAGE,
                 payload: message,
             });
-
-            return Promise.reject();
         }
     );
 };

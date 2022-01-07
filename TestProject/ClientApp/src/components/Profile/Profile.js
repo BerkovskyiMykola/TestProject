@@ -15,12 +15,11 @@ import {
     Jumbotron
 } from 'reactstrap';
 
-export default function Profile(props) {
+export default function Profile() {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
     const [modalEdit, setModalEdit] = useState(false);
-
     const [model, setModel] = useState({ lastname: "", firstname: "" });
 
     const { profile, message } = useSelector(state => ({
@@ -30,12 +29,10 @@ export default function Profile(props) {
 
     useEffect(() => {
         dispatch(getProfile())
-            .then(() => { })
-            .catch(() => { props.history.push("/404") });
-    }, [dispatch, props.history])
+    }, [dispatch])
 
     const editRecord = () => {
-        dispatch(editProfile(model.lastname, model.firstname))
+        dispatch(editProfile(model.lastname, model.firstname, t))
             .then(() => {
                 setModalEdit(false);
                 dispatch(clearMessage());

@@ -28,8 +28,6 @@ export default function Login() {
         e.preventDefault();
 
         dispatch(login(model.email, model.password))
-            .then(() => { })
-            .catch(() => { });
     }
 
     if (isLoggedIn) {
