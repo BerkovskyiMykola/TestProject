@@ -85,8 +85,10 @@ namespace TestProject.Controllers
             }
 
             string dbname = _context.Database.GetDbConnection().Database;
-            string sqlCommand1 = $"USE master RESTORE DATABASE {dbname} FROM DISK = '{path}'";
-            await _context.Database.ExecuteSqlRawAsync(sqlCommand1);
+            string sqlCommand = $"ALTER DATABASE {dbname} SET Single_User WITH Rollback Immediate; " +
+                $"USE master RESTORE DATABASE {dbname} FROM DISK = '{path}';" +
+                $"ALTER DATABASE {dbname} SET Multi_User";
+            await _context.Database.ExecuteSqlRawAsync(sqlCommand);
             return Ok();
         }
     }
