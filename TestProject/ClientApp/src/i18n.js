@@ -15,6 +15,7 @@ i18n.use(LanguageDetector).init({
                 DeleteSuccess: "Deleted successfully",
                 EditSuccess: "Edited successfully",
                 RestorSuccess: "Restored successfully",
+                defaultOption: "Choose an option",
                 Actions: "Actions",
                 ListEmpty: "List is empty",
 
@@ -35,6 +36,7 @@ i18n.use(LanguageDetector).init({
                 backups: "Backups",
                 backupName: "Backup name",
                 database: "Database",
+                users: "Users",
 
                 "This field is required!": "This field is required!",
                 "This is not a valid email": "This is not a valid email",
@@ -57,6 +59,7 @@ i18n.use(LanguageDetector).init({
                 DeleteSuccess: "Видалено успішно",
                 EditSuccess: "Відредаговано успішно",
                 RestorSuccess: "Відновлено успішно",
+                defaultOption: "Виберіть варіант",
                 Actions: "Дії",
                 ListEmpty: "Список пустий",
 
@@ -77,6 +80,7 @@ i18n.use(LanguageDetector).init({
                 backups: "Бекапи",
                 backupName: "Назва бекапа",
                 database: "База даних",
+                users: "Користувачі",
 
                 "This field is required!": "Це поле необхідне!",
                 "This is not a valid email": "Це не валідна пошта",
