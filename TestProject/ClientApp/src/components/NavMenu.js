@@ -58,7 +58,7 @@ const NavMenu = () => {
                                             <NavLink tag={Link} to="/database">{t("database")}</NavLink>
                                         </NavItem>
                                         <NavItem>
-                                            <NavLink tag={Link} to="/users">{t("Users")}</NavLink>
+                                            <NavLink tag={Link} to="/users">{t("users")}</NavLink>
                                         </NavItem>
                                     </>
                                 }

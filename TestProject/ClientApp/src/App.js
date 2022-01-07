@@ -12,10 +12,11 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Profile from "./components/Profile";
 import NotFound from "./components/NotFound";
+import Database from './components/Datebase';
+import UsersPage from './components/UsersPage';
 import { PrivateRoute } from "./components/PrivateRoute/PrivateRoute";
 
 import './App.css'
-import Database from './components/Datebase';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -40,6 +41,7 @@ const App = () => {
                 <Route exact path="/register" component={Register} />
                 <PrivateRoute exact path="/profile" component={Profile} />
                 <PrivateRoute exact path="/database" component={Database} roles={["Admin"]} />
+                <PrivateRoute exact path="/users" component={UsersPage} roles={["Admin"]} />
                 <Route path="/404" component={NotFound} />
                 <Redirect to="/404" />
             </Layout>
