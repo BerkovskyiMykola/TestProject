@@ -70,8 +70,8 @@ namespace TestProject.Controllers
         {
             return Ok(await _context.Users
                 .Include(x => x.Role)
-                .Where(x => x.Email != HttpContext.User.Identity!.Name)
-                .Select(x => new { x.Id, x.Firstname, x.Lastname, x.Email, x.Role })
+                .Where(x => x.Id.ToString() != HttpContext.User.Identity!.Name)
+                .Select(x => new { x.Id, x.Firstname, x.Lastname, x.Email, RoleId = x.Role!.Id, Role = x.Role.Name })
                 .ToListAsync());
         }
 
@@ -89,7 +89,9 @@ namespace TestProject.Controllers
             await _context.Users.AddAsync(model);
             await _context.SaveChangesAsync();
 
-            return Ok(new { model.Id, model.Firstname, model.Lastname, model.Email, model.Role });
+            var role = await _context.Roles.FindAsync(model.RoleId);
+
+            return Ok(new { model.Id, model.Firstname, model.Lastname, model.Email, RoleId = role!.Id, Role = role.Name });
         }
 
         [HttpPut("edit/{id}")]
@@ -119,7 +121,7 @@ namespace TestProject.Controllers
 
         [HttpDelete("delete/{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<IActionResult> DeleteUser(Guid id)
         {
             var user = await _context.Users.FindAsync(id);
 
