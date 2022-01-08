@@ -4,7 +4,7 @@ namespace TestProject.Models.Request
 {
     public class EditUserRequest
     {
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
         [Required]
         [StringLength(30, MinimumLength = 2)]
         public string Lastname { set; get; } = "";

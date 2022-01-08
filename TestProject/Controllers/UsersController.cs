@@ -96,7 +96,7 @@ namespace TestProject.Controllers
 
         [HttpPut("edit/{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> PutUser(int id, EditUserRequest model)
+        public async Task<IActionResult> PutUser(Guid id, EditUserRequest model)
         {
             if (id != model.UserId)
             {
