@@ -34,7 +34,7 @@ namespace TestProject.Tests
         {
             //Arrage
             var options = new DbContextOptionsBuilder<ApplicationContext>()
-                .UseInMemoryDatabase(databaseName: "Test1")
+                .UseInMemoryDatabase(databaseName: "AuthControllerDB_1")
                 .Options;
 
             using var dbContext = new ApplicationContext(options);
@@ -45,9 +45,9 @@ namespace TestProject.Tests
             dbContext.SaveChanges();
 
             var user = new RegisterRequest { Email = "Test1", Password = "Test1" };
+            var controller = new AuthController(dbContext, _jwtService.Object, _passwordHasher.Object);
 
             //Act
-            var controller = new AuthController(dbContext, _jwtService.Object, _passwordHasher.Object);
             var response = await controller.Register(user);
 
             //Assert
@@ -59,7 +59,7 @@ namespace TestProject.Tests
         {
             //Arrage
             var options = new DbContextOptionsBuilder<ApplicationContext>()
-                .UseInMemoryDatabase(databaseName: "Test2")
+                .UseInMemoryDatabase(databaseName: "AuthControllerDB_2")
                 .Options;
 
             using var dbContext = new ApplicationContext(options);
@@ -71,8 +71,9 @@ namespace TestProject.Tests
 
             var user = new RegisterRequest { Email = "Test1", Password = "Test1" };
 
-            //Act
             var controller = new AuthController(dbContext, _jwtService.Object, _passwordHasher.Object);
+
+            //Act
             await controller.Register(user);
             var response = await controller.Register(user);
 
@@ -86,7 +87,7 @@ namespace TestProject.Tests
         {
             //Arrage
             var options = new DbContextOptionsBuilder<ApplicationContext>()
-                .UseInMemoryDatabase(databaseName: "Test3")
+                .UseInMemoryDatabase(databaseName: "AuthControllerDB_3")
                 .Options;
 
             using var dbContext = new ApplicationContext(options);
@@ -99,8 +100,9 @@ namespace TestProject.Tests
             var user = new RegisterRequest { Email = "Test1", Password = "Test1" };
             var auth = new AuthenticateRequest { Email = "Test1", Password = "Test1" };
 
-            //Act
             var controller = new AuthController(dbContext, _jwtService.Object, _passwordHasher.Object);
+
+            //Act
             await controller.Register(user);
             var response = await controller.Authenticate(auth);
 
@@ -113,7 +115,7 @@ namespace TestProject.Tests
         {
             //Arrage
             var options = new DbContextOptionsBuilder<ApplicationContext>()
-                .UseInMemoryDatabase(databaseName: "Test4")
+                .UseInMemoryDatabase(databaseName: "AuthControllerDB_4")
                 .Options;
 
             using var dbContext = new ApplicationContext(options);
@@ -125,8 +127,9 @@ namespace TestProject.Tests
 
             var auth = new AuthenticateRequest { Email = "Test1", Password = "Test1" };
 
-            //Act
             var controller = new AuthController(dbContext, _jwtService.Object, _passwordHasher.Object);
+
+            //Act
             var response = await controller.Authenticate(auth);
 
             //Assert
@@ -139,7 +142,7 @@ namespace TestProject.Tests
         {
             //Arrage
             var options = new DbContextOptionsBuilder<ApplicationContext>()
-                .UseInMemoryDatabase(databaseName: "Test5")
+                .UseInMemoryDatabase(databaseName: "AuthControllerDB_5")
                 .Options;
 
             using var dbContext = new ApplicationContext(options);
@@ -152,8 +155,9 @@ namespace TestProject.Tests
             var user = new RegisterRequest { Email = "Test1", Password = "Test1" };
             var auth = new AuthenticateRequest { Email = "Test1", Password = "Test2" };
 
-            //Act
             var controller = new AuthController(dbContext, _jwtService.Object, _passwordHasher.Object);
+
+            //Act
             await controller.Register(user);
             var response = await controller.Authenticate(auth);
 
