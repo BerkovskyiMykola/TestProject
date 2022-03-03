@@ -13,15 +13,13 @@ namespace TestProject.Tests
 {
     public class AuthControllerTests
     {
-        public readonly Mock<IJwtService> _jwtService;
-        public readonly Mock<IPasswordHasher<User>> _passwordHasher;
+        public readonly Mock<IJwtService> _jwtService = new Mock<IJwtService>();
+        public readonly Mock<IPasswordHasher<User>> _passwordHasher = new Mock<IPasswordHasher<User>>();
         public AuthControllerTests()
         {
-            _jwtService = new Mock<IJwtService>();
             _jwtService
                 .Setup(x => x.GetToken(It.IsAny<JwtUser>())).Returns(It.IsAny<string>());
 
-            _passwordHasher = new Mock<IPasswordHasher<User>>();
             _passwordHasher
                 .Setup(x => x.HashPassword(It.IsAny<User>(), It.IsAny<string>()))
                 .Returns((User user, string pass) => pass);
@@ -79,7 +77,8 @@ namespace TestProject.Tests
             var response = await controller.Register(user);
 
             //Assert
-            Assert.IsType<BadRequestObjectResult>(response);
+            var badRequestObjectResult = Assert.IsType<BadRequestObjectResult>(response);
+            Assert.Equal("User with such Email exists", badRequestObjectResult.Value);
         }
 
         [Fact]
@@ -124,7 +123,6 @@ namespace TestProject.Tests
             dbContext.Add(role);
             dbContext.SaveChanges();
 
-            var user = new RegisterRequest { Email = "Test1", Password = "Test1" };
             var auth = new AuthenticateRequest { Email = "Test1", Password = "Test1" };
 
             //Act
@@ -132,7 +130,36 @@ namespace TestProject.Tests
             var response = await controller.Authenticate(auth);
 
             //Assert
-            Assert.IsType<BadRequestObjectResult>(response);
+            var badRequestObjectResult = Assert.IsType<BadRequestObjectResult>(response);
+            Assert.Equal("Email or password is incorrect", badRequestObjectResult.Value);
+        }
+
+        [Fact]
+        public async void Authenticate_Shouldnt_Authorize_User_With_Wrong_Password()
+        {
+            //Arrage
+            var options = new DbContextOptionsBuilder<ApplicationContext>()
+                .UseInMemoryDatabase(databaseName: "Test5")
+                .Options;
+
+            using var dbContext = new ApplicationContext(options);
+
+            var role = new Role { Id = Guid.NewGuid(), Name = "User" };
+
+            dbContext.Add(role);
+            dbContext.SaveChanges();
+
+            var user = new RegisterRequest { Email = "Test1", Password = "Test1" };
+            var auth = new AuthenticateRequest { Email = "Test1", Password = "Test2" };
+
+            //Act
+            var controller = new AuthController(dbContext, _jwtService.Object, _passwordHasher.Object);
+            await controller.Register(user);
+            var response = await controller.Authenticate(auth);
+
+            //Assert
+            var badRequestObjectResult = Assert.IsType<BadRequestObjectResult>(response);
+            Assert.Equal("Email or password is incorrect", badRequestObjectResult.Value);
         }
     }
 }
