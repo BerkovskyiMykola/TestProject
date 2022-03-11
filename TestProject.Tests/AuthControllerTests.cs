@@ -45,10 +45,10 @@ namespace TestProject.Tests
             dbContext.SaveChanges();
 
             var user = new RegisterRequest { Email = "Test1", Password = "Test1" };
-            var controller = new AuthController(dbContext, _jwtService.Object, _passwordHasher.Object);
+            var sut = new AuthController(dbContext, _jwtService.Object, _passwordHasher.Object);
 
             //Act
-            var response = await controller.Register(user);
+            var response = await sut.Register(user);
 
             //Assert
             Assert.IsType<OkObjectResult>(response);
@@ -71,11 +71,11 @@ namespace TestProject.Tests
 
             var user = new RegisterRequest { Email = "Test1", Password = "Test1" };
 
-            var controller = new AuthController(dbContext, _jwtService.Object, _passwordHasher.Object);
+            var sut = new AuthController(dbContext, _jwtService.Object, _passwordHasher.Object);
 
             //Act
-            await controller.Register(user);
-            var response = await controller.Register(user);
+            await sut.Register(user);
+            var response = await sut.Register(user);
 
             //Assert
             var badRequestObjectResult = Assert.IsType<BadRequestObjectResult>(response);
@@ -100,11 +100,11 @@ namespace TestProject.Tests
             var user = new RegisterRequest { Email = "Test1", Password = "Test1" };
             var auth = new AuthenticateRequest { Email = "Test1", Password = "Test1" };
 
-            var controller = new AuthController(dbContext, _jwtService.Object, _passwordHasher.Object);
+            var sut = new AuthController(dbContext, _jwtService.Object, _passwordHasher.Object);
 
             //Act
-            await controller.Register(user);
-            var response = await controller.Authenticate(auth);
+            await sut.Register(user);
+            var response = await sut.Authenticate(auth);
 
             //Assert
             Assert.IsType<OkObjectResult>(response);
@@ -127,10 +127,10 @@ namespace TestProject.Tests
 
             var auth = new AuthenticateRequest { Email = "Test1", Password = "Test1" };
 
-            var controller = new AuthController(dbContext, _jwtService.Object, _passwordHasher.Object);
+            var sut = new AuthController(dbContext, _jwtService.Object, _passwordHasher.Object);
 
             //Act
-            var response = await controller.Authenticate(auth);
+            var response = await sut.Authenticate(auth);
 
             //Assert
             var badRequestObjectResult = Assert.IsType<BadRequestObjectResult>(response);
@@ -155,11 +155,11 @@ namespace TestProject.Tests
             var user = new RegisterRequest { Email = "Test1", Password = "Test1" };
             var auth = new AuthenticateRequest { Email = "Test1", Password = "Test2" };
 
-            var controller = new AuthController(dbContext, _jwtService.Object, _passwordHasher.Object);
+            var sut = new AuthController(dbContext, _jwtService.Object, _passwordHasher.Object);
 
             //Act
-            await controller.Register(user);
-            var response = await controller.Authenticate(auth);
+            await sut.Register(user);
+            var response = await sut.Authenticate(auth);
 
             //Assert
             var badRequestObjectResult = Assert.IsType<BadRequestObjectResult>(response);
