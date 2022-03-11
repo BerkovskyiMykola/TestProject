@@ -11,10 +11,11 @@ using Xunit;
 
 namespace TestProject.Tests
 {
-    public class AuthControllerTests
+    public class AuthControllerTests : IDisposable
     {
         public readonly Mock<IJwtService> _jwtService = new Mock<IJwtService>();
         public readonly Mock<IPasswordHasher<User>> _passwordHasher = new Mock<IPasswordHasher<User>>();
+        public readonly ApplicationContext _context;
         public AuthControllerTests()
         {
             _jwtService
@@ -27,25 +28,21 @@ namespace TestProject.Tests
                 .Setup(x => x.VerifyHashedPassword(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns((User user, string aPass, string bPass) =>
                 aPass == bPass ? PasswordVerificationResult.Success : PasswordVerificationResult.Failed);
+
+            var options = new DbContextOptionsBuilder<ApplicationContext>()
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+                .Options;
+
+            _context = new ApplicationContext(options);
+            _context.Database.EnsureCreated();
         }
 
         [Fact]
-        public async void Register_Should_Register_User()
+        public async void Should_register_an_user()
         {
-            //Arrage
-            var options = new DbContextOptionsBuilder<ApplicationContext>()
-                .UseInMemoryDatabase(databaseName: "AuthControllerDB_1")
-                .Options;
-
-            using var dbContext = new ApplicationContext(options);
-
-            var role = new Role { Id = Guid.NewGuid(), Name = "User" };
-
-            dbContext.Add(role);
-            dbContext.SaveChanges();
-
+            //Arrange
             var user = new RegisterRequest { Email = "Test1", Password = "Test1" };
-            var sut = new AuthController(dbContext, _jwtService.Object, _passwordHasher.Object);
+            var sut = new AuthController(_context, _jwtService.Object, _passwordHasher.Object);
 
             //Act
             var response = await sut.Register(user);
@@ -55,23 +52,11 @@ namespace TestProject.Tests
         }
 
         [Fact]
-        public async void Register_Shouldnt_Register_2_Same_Users()
+        public async void Should_not_register_two_same_users()
         {
-            //Arrage
-            var options = new DbContextOptionsBuilder<ApplicationContext>()
-                .UseInMemoryDatabase(databaseName: "AuthControllerDB_2")
-                .Options;
-
-            using var dbContext = new ApplicationContext(options);
-
-            var role = new Role { Id = Guid.NewGuid(), Name = "User" };
-
-            dbContext.Add(role);
-            dbContext.SaveChanges();
-
+            //Arrange
             var user = new RegisterRequest { Email = "Test1", Password = "Test1" };
-
-            var sut = new AuthController(dbContext, _jwtService.Object, _passwordHasher.Object);
+            var sut = new AuthController(_context, _jwtService.Object, _passwordHasher.Object);
 
             //Act
             await sut.Register(user);
@@ -83,24 +68,12 @@ namespace TestProject.Tests
         }
 
         [Fact]
-        public async void Authenticate_Should_Authorize_Resgistered_User()
+        public async void Should_authorize_a_registered_user()
         {
-            //Arrage
-            var options = new DbContextOptionsBuilder<ApplicationContext>()
-                .UseInMemoryDatabase(databaseName: "AuthControllerDB_3")
-                .Options;
-
-            using var dbContext = new ApplicationContext(options);
-
-            var role = new Role { Id = Guid.NewGuid(), Name = "User" };
-
-            dbContext.Add(role);
-            dbContext.SaveChanges();
-
+            //Arrange
             var user = new RegisterRequest { Email = "Test1", Password = "Test1" };
             var auth = new AuthenticateRequest { Email = "Test1", Password = "Test1" };
-
-            var sut = new AuthController(dbContext, _jwtService.Object, _passwordHasher.Object);
+            var sut = new AuthController(_context, _jwtService.Object, _passwordHasher.Object);
 
             //Act
             await sut.Register(user);
@@ -111,23 +84,11 @@ namespace TestProject.Tests
         }
 
         [Fact]
-        public async void Authenticate_Shouldnt_Authorize_Unresgistered_User()
+        public async void Should_not_authorize_an_unresgistered_user()
         {
-            //Arrage
-            var options = new DbContextOptionsBuilder<ApplicationContext>()
-                .UseInMemoryDatabase(databaseName: "AuthControllerDB_4")
-                .Options;
-
-            using var dbContext = new ApplicationContext(options);
-
-            var role = new Role { Id = Guid.NewGuid(), Name = "User" };
-
-            dbContext.Add(role);
-            dbContext.SaveChanges();
-
+            //Arrange
             var auth = new AuthenticateRequest { Email = "Test1", Password = "Test1" };
-
-            var sut = new AuthController(dbContext, _jwtService.Object, _passwordHasher.Object);
+            var sut = new AuthController(_context, _jwtService.Object, _passwordHasher.Object);
 
             //Act
             var response = await sut.Authenticate(auth);
@@ -138,24 +99,12 @@ namespace TestProject.Tests
         }
 
         [Fact]
-        public async void Authenticate_Shouldnt_Authorize_User_With_Wrong_Password()
+        public async void Should_not_authorize_a_user_with_wrong_password()
         {
-            //Arrage
-            var options = new DbContextOptionsBuilder<ApplicationContext>()
-                .UseInMemoryDatabase(databaseName: "AuthControllerDB_5")
-                .Options;
-
-            using var dbContext = new ApplicationContext(options);
-
-            var role = new Role { Id = Guid.NewGuid(), Name = "User" };
-
-            dbContext.Add(role);
-            dbContext.SaveChanges();
-
+            //Arrange
             var user = new RegisterRequest { Email = "Test1", Password = "Test1" };
             var auth = new AuthenticateRequest { Email = "Test1", Password = "Test2" };
-
-            var sut = new AuthController(dbContext, _jwtService.Object, _passwordHasher.Object);
+            var sut = new AuthController(_context, _jwtService.Object, _passwordHasher.Object);
 
             //Act
             await sut.Register(user);
@@ -164,6 +113,12 @@ namespace TestProject.Tests
             //Assert
             var badRequestObjectResult = Assert.IsType<BadRequestObjectResult>(response);
             Assert.Equal("Email or password is incorrect", badRequestObjectResult.Value);
+        }
+
+        public void Dispose()
+        {
+            _context.Database.EnsureDeleted();
+            _context.Dispose();
         }
     }
 }
