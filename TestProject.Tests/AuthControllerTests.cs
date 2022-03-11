@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using FluentAssertions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -48,7 +49,7 @@ namespace TestProject.Tests
             var response = await sut.Register(user);
 
             //Assert
-            Assert.IsType<OkObjectResult>(response);
+            response.Should().BeOfType<OkObjectResult>();
         }
 
         [Fact]
@@ -63,8 +64,8 @@ namespace TestProject.Tests
             var response = await sut.Register(user);
 
             //Assert
-            var badRequestObjectResult = Assert.IsType<BadRequestObjectResult>(response);
-            Assert.Equal("User with such Email exists", badRequestObjectResult.Value);
+            response.Should().BeOfType<BadRequestObjectResult>()
+                .Which.Value.Should().Be("User with such Email exists");
         }
 
         [Fact]
@@ -80,7 +81,7 @@ namespace TestProject.Tests
             var response = await sut.Authenticate(auth);
 
             //Assert
-            Assert.IsType<OkObjectResult>(response);
+            response.Should().BeOfType<OkObjectResult>();
         }
 
         [Fact]
@@ -94,8 +95,8 @@ namespace TestProject.Tests
             var response = await sut.Authenticate(auth);
 
             //Assert
-            var badRequestObjectResult = Assert.IsType<BadRequestObjectResult>(response);
-            Assert.Equal("Email or password is incorrect", badRequestObjectResult.Value);
+            response.Should().BeOfType<BadRequestObjectResult>()
+                .Which.Value.Should().Be("Email or password is incorrect");
         }
 
         [Fact]
@@ -111,8 +112,8 @@ namespace TestProject.Tests
             var response = await sut.Authenticate(auth);
 
             //Assert
-            var badRequestObjectResult = Assert.IsType<BadRequestObjectResult>(response);
-            Assert.Equal("Email or password is incorrect", badRequestObjectResult.Value);
+            response.Should().BeOfType<BadRequestObjectResult>()
+                .Which.Value.Should().Be("Email or password is incorrect");
         }
 
         public void Dispose()
