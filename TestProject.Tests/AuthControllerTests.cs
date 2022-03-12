@@ -46,26 +46,30 @@ namespace TestProject.Tests
             var sut = new AuthController(_context, _jwtService.Object, _passwordHasher.Object);
 
             //Act
-            var response = await sut.Register(user);
+            var result = await sut.Register(user);
+            var userIsAdded = _context.Users.Any(x => x.Email == user.Email && x.Password == user.Password);
 
             //Assert
-            response.Should().BeOfType<OkObjectResult>();
+            result.Should().BeOfType<OkObjectResult>();
+            userIsAdded.Should().BeTrue();
         }
 
         [Fact]
-        public async void Should_not_register_two_same_users()
+        public async void Should_not_register_many_same_users()
         {
             //Arrange
             var user = new RegisterRequest { Email = "Test1", Password = "Test1" };
             var sut = new AuthController(_context, _jwtService.Object, _passwordHasher.Object);
 
-            //Act
             await sut.Register(user);
-            var response = await sut.Register(user);
+
+            //Act
+            var result = await sut.Register(user);
+            var amountRegisteredUsers = _context.Users.Count(x => x.Email == user.Email && x.Password == user.Password);
 
             //Assert
-            response.Should().BeOfType<BadRequestObjectResult>()
-                .Which.Value.Should().Be("User with such Email exists");
+            result.Should().BeOfType<BadRequestObjectResult>();
+            amountRegisteredUsers.Should().Be(1);
         }
 
         [Fact]
@@ -76,8 +80,9 @@ namespace TestProject.Tests
             var auth = new AuthenticateRequest { Email = "Test1", Password = "Test1" };
             var sut = new AuthController(_context, _jwtService.Object, _passwordHasher.Object);
 
-            //Act
             await sut.Register(user);
+
+            //Act
             var response = await sut.Authenticate(auth);
 
             //Assert
@@ -95,8 +100,7 @@ namespace TestProject.Tests
             var response = await sut.Authenticate(auth);
 
             //Assert
-            response.Should().BeOfType<BadRequestObjectResult>()
-                .Which.Value.Should().Be("Email or password is incorrect");
+            response.Should().BeOfType<BadRequestObjectResult>();
         }
 
         [Fact]
@@ -107,13 +111,13 @@ namespace TestProject.Tests
             var auth = new AuthenticateRequest { Email = "Test1", Password = "Test2" };
             var sut = new AuthController(_context, _jwtService.Object, _passwordHasher.Object);
 
-            //Act
             await sut.Register(user);
+
+            //Act
             var response = await sut.Authenticate(auth);
 
             //Assert
-            response.Should().BeOfType<BadRequestObjectResult>()
-                .Which.Value.Should().Be("Email or password is incorrect");
+            response.Should().BeOfType<BadRequestObjectResult>();
         }
 
         public void Dispose()
