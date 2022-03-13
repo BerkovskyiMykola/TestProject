@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TestProject.Models;
 using TestProject.Models.Request;
+using TestProject.Models.Response;
 using TestProject.Services.Authorization;
 using TestProject.Services.Authorization.Models;
 
@@ -47,9 +48,9 @@ namespace TestProject.Controllers
 
             var token = _jwtService.GetToken(new JwtUser { UserId = newUser.Id.ToString(), Role = newUser.Role!.Name });
 
-            return Ok(new
+            return Ok(new AuthorizeResponse
             {
-                token,
+                Token = token,
                 UserId = newUser.Id,
                 Role = newUser.Role.Name
             });
@@ -79,9 +80,9 @@ namespace TestProject.Controllers
 
             var token = _jwtService.GetToken(new JwtUser { UserId = user.Id.ToString(), Role = user.Role!.Name });
 
-            return Ok(new
+            return Ok(new AuthorizeResponse
             {
-                token,
+                Token = token,
                 Role = user.Role!.Name,
                 UserId = user.Id
             });
