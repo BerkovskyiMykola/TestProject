@@ -14,21 +14,21 @@ namespace TestProject.Tests
 {
     public class AuthControllerTests : IDisposable
     {
-        public readonly Mock<IJwtService> _jwtService = new Mock<IJwtService>();
-        public readonly Mock<IPasswordHasher<User>> _passwordHasher = new Mock<IPasswordHasher<User>>();
+        public readonly Mock<IJwtService> _stubJwtService = new Mock<IJwtService>();
+        public readonly Mock<IPasswordHasher<User>> _stubPasswordHasher = new Mock<IPasswordHasher<User>>();
         public readonly ApplicationContext _context;
         public AuthControllerTests()
         {
-            _jwtService
+            _stubJwtService
                 .Setup(x => x.GetToken(It.IsAny<JwtUser>())).Returns(It.IsAny<string>());
 
-            _passwordHasher
+            _stubPasswordHasher
                 .Setup(x => x.HashPassword(It.IsAny<User>(), It.IsAny<string>()))
                 .Returns((User user, string pass) => pass);
-            _passwordHasher
+            _stubPasswordHasher
                 .Setup(x => x.VerifyHashedPassword(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns((User user, string aPass, string bPass) =>
-                aPass == bPass ? PasswordVerificationResult.Success : PasswordVerificationResult.Failed);
+                    aPass == bPass ? PasswordVerificationResult.Success : PasswordVerificationResult.Failed);
 
             var options = new DbContextOptionsBuilder<ApplicationContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
@@ -43,7 +43,7 @@ namespace TestProject.Tests
         {
             //Arrange
             var user = new RegisterRequest { Email = "Test1", Password = "Test1" };
-            var sut = new AuthController(_context, _jwtService.Object, _passwordHasher.Object);
+            var sut = new AuthController(_context, _stubJwtService.Object, _stubPasswordHasher.Object);
 
             //Act
             var result = await sut.Register(user);
@@ -59,7 +59,7 @@ namespace TestProject.Tests
         {
             //Arrange
             var user = new RegisterRequest { Email = "Test1", Password = "Test1" };
-            var sut = new AuthController(_context, _jwtService.Object, _passwordHasher.Object);
+            var sut = new AuthController(_context, _stubJwtService.Object, _stubPasswordHasher.Object);
 
             await sut.Register(user);
 
@@ -78,7 +78,7 @@ namespace TestProject.Tests
             //Arrange
             var user = new RegisterRequest { Email = "Test1", Password = "Test1" };
             var auth = new AuthenticateRequest { Email = "Test1", Password = "Test1" };
-            var sut = new AuthController(_context, _jwtService.Object, _passwordHasher.Object);
+            var sut = new AuthController(_context, _stubJwtService.Object, _stubPasswordHasher.Object);
 
             await sut.Register(user);
 
@@ -94,7 +94,7 @@ namespace TestProject.Tests
         {
             //Arrange
             var auth = new AuthenticateRequest { Email = "Test1", Password = "Test1" };
-            var sut = new AuthController(_context, _jwtService.Object, _passwordHasher.Object);
+            var sut = new AuthController(_context, _stubJwtService.Object, _stubPasswordHasher.Object);
 
             //Act
             var response = await sut.Authenticate(auth);
@@ -109,7 +109,7 @@ namespace TestProject.Tests
             //Arrange
             var user = new RegisterRequest { Email = "Test1", Password = "Test1" };
             var auth = new AuthenticateRequest { Email = "Test1", Password = "Test2" };
-            var sut = new AuthController(_context, _jwtService.Object, _passwordHasher.Object);
+            var sut = new AuthController(_context, _stubJwtService.Object, _stubPasswordHasher.Object);
 
             await sut.Register(user);
 
