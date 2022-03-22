@@ -12,7 +12,7 @@ using TestProject;
 namespace TestProject.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20211228183907_init")]
+    [Migration("20220322190457_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,33 +23,6 @@ namespace TestProject.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("TestProject.Models.Role", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("7363522a-2826-4a9c-990e-335661089e13"),
-                            Name = "User"
-                        },
-                        new
-                        {
-                            Id = new Guid("a9411792-c5a8-4430-b02b-b5ddf650c310"),
-                            Name = "Admin"
-                        });
-                });
 
             modelBuilder.Entity("TestProject.Models.User", b =>
                 {
@@ -75,30 +48,12 @@ namespace TestProject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<byte>("Role")
+                        .HasColumnType("tinyint");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RoleId");
-
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("TestProject.Models.User", b =>
-                {
-                    b.HasOne("TestProject.Models.Role", "Role")
-                        .WithMany("Users")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("TestProject.Models.Role", b =>
-                {
-                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

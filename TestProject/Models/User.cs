@@ -17,7 +17,6 @@ namespace TestProject.Models
         [Required]
         public string Password { set; get; } = "";
 
-        public Guid RoleId { get; set; }
-        public Role? Role { get; set; }
+        public Role Role { get; set; } = Role.User;
     }
 }

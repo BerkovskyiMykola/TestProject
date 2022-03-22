@@ -1,10 +1,8 @@
 ﻿namespace TestProject.Models
 {
-    public class Role
+    public enum Role : byte
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = "";
-
-        public List<User> Users { get; set; } = new List<User>();
+        User = 0,
+        Admin = 1
     }
 }
