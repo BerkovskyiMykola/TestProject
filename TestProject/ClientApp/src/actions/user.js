@@ -1,5 +1,5 @@
 import EventBus from "../common/EventBus";
-import { CREATE_USER_SUCCESS, DELETE_USER_SUCCESS, CREATE_USER_ERROR, DELETE_USER_ERROR, GET_ROLES, EDIT_USER_SUCCESS, EDIT_USER_ERROR, GET_USERS } from "../constants/user";
+import { CREATE_USER_SUCCESS, DELETE_USER_SUCCESS, CREATE_USER_ERROR, DELETE_USER_ERROR, EDIT_USER_SUCCESS, EDIT_USER_ERROR, GET_USERS } from "../constants/user";
 import { SET_MESSAGE } from "../constants/message";
 import userService from "../services/user.service"
 import { toast } from "react-toastify";
@@ -25,27 +25,8 @@ export const getUsers = (t) => (dispatch) => {
     )
 }
 
-export const getRoles = (t) => (dispatch) => {
-    return userService.getRoles().then(
-        (responce) => {
-            dispatch({
-                type: GET_ROLES,
-                payload: { roles: responce.data }
-            });
-        },
-        (error) => {
-            if (error.response && error.response.status === 401) {
-                EventBus.dispatch("logout");
-            }
-            else {
-                toast.error(t("Error"));
-            }
-        }
-    )
-}
-
-export const createUser = (lastname, firstname, roleId, email, password, t) => (dispatch) => {
-    return userService.createUser(lastname, firstname, roleId, email, password).then(
+export const createUser = (lastname, firstname, role, email, password, t) => (dispatch) => {
+    return userService.createUser(lastname, firstname, role, email, password).then(
         (responce) => {
             dispatch({
                 type: CREATE_USER_SUCCESS,
@@ -102,12 +83,12 @@ export const deleteUser = (id, t) => (dispatch) => {
     )
 }
 
-export const editUser = (userId, lastname, firstname, roleId, role, t) => (dispatch) => {
-    return userService.editUser(userId, lastname, firstname, roleId).then(
+export const editUser = (userId, lastname, firstname, role, t) => (dispatch) => {
+    return userService.editUser(userId, lastname, firstname, role).then(
         (responce) => {
             dispatch({
                 type: EDIT_USER_SUCCESS,
-                payload: { userId, lastname, firstname, roleId, role }
+                payload: { userId, lastname, firstname, role }
             });
 
             toast.success(t("EditSuccess"));

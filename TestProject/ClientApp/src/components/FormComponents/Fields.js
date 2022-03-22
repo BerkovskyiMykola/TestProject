@@ -85,13 +85,13 @@ export const FieldInput = ({ name, model, setModel, minLength, maxLength, requir
     );
 }
 
-export const SelectInput = ({ name, id, value, records, model, setModel, required = true }) => {
+export const SelectInput = ({ labelName, name, id, value, records, model, setModel, required = true }) => {
 
     const { t } = useTranslation();
 
     return (
         <FormGroup>
-            <Label for={name}>{t(name)}</Label>
+            <Label for={name}>{t(labelName)}</Label>
             <Input
                 type="select"
                 name={name}

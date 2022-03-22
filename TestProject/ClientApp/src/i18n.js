@@ -22,7 +22,7 @@ i18n.use(LanguageDetector).init({
                 SignUp: "Sign Up",
                 LogOut: "LogOut",
                 Login: "Login",
-                role: "Role",
+                roleName: "Role",
                 CreateBackup: "Create Backup",
                 RestoreDatabase: "Restore Вatabase",
 
@@ -66,7 +66,7 @@ i18n.use(LanguageDetector).init({
                 SignUp: "Зареєструватись",
                 LogOut: "Вийти",
                 Login: "Ввійти",
-                role: "Роль",
+                roleName: "Роль",
                 CreateBackup: "Створити резервну копію",
                 RestoreDatabase: "Відновити базу даних",
 
