@@ -17,7 +17,7 @@ namespace TestProject.Controllers
         private readonly ApplicationContext _context;
         private readonly IPasswordHasher<User> _passwordHasher;
 
-        public UsersController(ApplicationContext context, IJwtService jwtService, IPasswordHasher<User> passwordHasher)
+        public UsersController(ApplicationContext context, IPasswordHasher<User> passwordHasher)
         {
             _context = context;
             _passwordHasher = passwordHasher;
@@ -28,7 +28,6 @@ namespace TestProject.Controllers
         public async Task<IActionResult> GetUser()
         {
             var user = await _context.Users
-                .Include(x => x.Role)
                 .SingleOrDefaultAsync(x => x.Id.ToString() == HttpContext.User.Identity!.Name);
 
             if (user == null)
@@ -41,7 +40,7 @@ namespace TestProject.Controllers
                 user.Firstname,
                 user.Lastname,
                 user.Email,
-                Role = user.Role!.Name
+                Role = user.Role.ToString()
             });
         }
 
@@ -69,9 +68,8 @@ namespace TestProject.Controllers
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             return Ok(await _context.Users
-                .Include(x => x.Role)
                 .Where(x => x.Id.ToString() != HttpContext.User.Identity!.Name)
-                .Select(x => new { x.Id, x.Firstname, x.Lastname, x.Email, RoleId = x.Role!.Id, Role = x.Role.Name })
+                .Select(x => new { x.Id, x.Firstname, x.Lastname, x.Email, x.Role })
                 .ToListAsync());
         }
 
@@ -89,9 +87,7 @@ namespace TestProject.Controllers
             await _context.Users.AddAsync(model);
             await _context.SaveChangesAsync();
 
-            var role = await _context.Roles.FindAsync(model.RoleId);
-
-            return Ok(new { model.Id, model.Firstname, model.Lastname, model.Email, RoleId = role!.Id, Role = role.Name });
+            return Ok(new { model.Id, model.Firstname, model.Lastname, model.Email, model.Role });
         }
 
         [HttpPut("edit/{id}")]
@@ -112,7 +108,7 @@ namespace TestProject.Controllers
 
             user.Lastname = model.Lastname;
             user.Firstname = model.Firstname;
-            user.RoleId = model.RoleId;
+            user.Role = model.Role;
 
             await _context.SaveChangesAsync();
 

@@ -38,7 +38,6 @@ namespace TestProject.Controllers
                 Firstname = model.Firstname,
                 Email = model.Email,
                 Password = model.Password,
-                Role = await _context.Roles.SingleOrDefaultAsync(x => x.Name == "User")
             };
 
             newUser.Password = _passwordHasher.HashPassword(newUser, model.Password);
@@ -46,20 +45,20 @@ namespace TestProject.Controllers
             await _context.Users.AddAsync(newUser);
             await _context.SaveChangesAsync();
 
-            var token = _jwtService.GetToken(new JwtUser { UserId = newUser.Id.ToString(), Role = newUser.Role!.Name });
+            var token = _jwtService.GetToken(new JwtUser { UserId = newUser.Id.ToString(), Role = newUser.Role.ToString() });
 
             return Ok(new AuthorizeResponse
             {
                 Token = token,
                 UserId = newUser.Id,
-                Role = newUser.Role.Name
+                Role = newUser.Role.ToString()
             });
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Authenticate(AuthenticateRequest model)
         {
-            var user = await _context.Users.Include(x => x.Role).SingleOrDefaultAsync(x => x.Email == model.Email);
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.Email == model.Email);
 
             if (user == null)
             {
@@ -78,12 +77,12 @@ namespace TestProject.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            var token = _jwtService.GetToken(new JwtUser { UserId = user.Id.ToString(), Role = user.Role!.Name });
+            var token = _jwtService.GetToken(new JwtUser { UserId = user.Id.ToString(), Role = user.Role.ToString() });
 
             return Ok(new AuthorizeResponse
             {
                 Token = token,
-                Role = user.Role!.Name,
+                Role = user.Role.ToString(),
                 UserId = user.Id
             });
         }

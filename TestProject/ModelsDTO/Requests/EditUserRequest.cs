@@ -11,7 +11,6 @@ namespace TestProject.Models.Request
         [Required]
         [StringLength(30, MinimumLength = 2)]
         public string Firstname { set; get; } = "";
-        [Required]
-        public Guid RoleId { set; get; }
+        public Role Role { set; get; }
     }
 }

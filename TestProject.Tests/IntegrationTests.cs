@@ -27,7 +27,7 @@ namespace TestProject.Tests
             var client = _factory.CreateClient();
 
             // Act
-            var response = await client.GetAsync("/api/Roles/all");
+            var response = await client.GetAsync("/api/Users/all");
 
             // Assert
             Assert.Equal(System.Net.HttpStatusCode.Unauthorized, response.StatusCode);
@@ -56,7 +56,7 @@ namespace TestProject.Tests
 
 
             // Act
-            var response = await client.GetAsync("/api/Roles/all");
+            var response = await client.GetAsync("/api/Users/all");
 
             // Assert
             Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
