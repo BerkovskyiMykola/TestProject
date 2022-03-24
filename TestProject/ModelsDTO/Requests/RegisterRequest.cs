@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TestProject.Models.Request
+namespace TestProject.ModelsDTO.Request
 {
     public class RegisterRequest
     {

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TestProject.Models;
 
-namespace TestProject.Models.Request
+namespace TestProject.ModelsDTO.Request
 {
     public class EditUserRequest
     {

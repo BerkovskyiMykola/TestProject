@@ -28,8 +28,8 @@ namespace TestProject.Services.Authorization
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, user.UserId),
-                new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role)
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString()),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.ToString())
             };
             ClaimsIdentity claimsIdentity =
                 new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,

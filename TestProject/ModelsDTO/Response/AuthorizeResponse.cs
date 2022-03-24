@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TestProject.Models.Response
+namespace TestProject.ModelsDTO.Response
 {
     public class AuthorizeResponse
     {

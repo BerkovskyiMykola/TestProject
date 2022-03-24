@@ -60,7 +60,7 @@ export default function Profile() {
                 <strong>{t("email")}:</strong> {profile.email}
             </p>
             <p>
-                <strong>{t("role")}:</strong> {profile.role}
+                <strong>{t("roleName")}:</strong> {profile.role}
             </p>
             <ModalWindow modal={modalEdit} deactiveModal={() => { setModalEdit(false); }} textHeader={t("Edit")}
                 textButton={t("Edit")} method={editRecord} message={message}

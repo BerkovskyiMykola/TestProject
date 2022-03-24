@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TestProject.Models;
-using TestProject.Models.Request;
+using TestProject.ModelsDTO.Request;
 using TestProject.Services.Authorization;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authorization;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
+using AutoMapper;
+using TestProject.ModelsDTO.Response;
 
 namespace TestProject.Controllers
 {
@@ -16,16 +18,18 @@ namespace TestProject.Controllers
     {
         private readonly ApplicationContext _context;
         private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IMapper _mapper;
 
-        public UsersController(ApplicationContext context, IPasswordHasher<User> passwordHasher)
+        public UsersController(ApplicationContext context, IPasswordHasher<User> passwordHasher, IMapper mapper)
         {
             _context = context;
             _passwordHasher = passwordHasher;
+            _mapper = mapper;
         }
 
         [HttpGet("profile")]
         [Authorize]
-        public async Task<IActionResult> GetUser()
+        public async Task<IActionResult> GetProfile()
         {
             var user = await _context.Users
                 .SingleOrDefaultAsync(x => x.Id.ToString() == HttpContext.User.Identity!.Name);
@@ -35,13 +39,7 @@ namespace TestProject.Controllers
                 return NotFound();
             }
 
-            return Ok(new
-            {
-                user.Firstname,
-                user.Lastname,
-                user.Email,
-                Role = user.Role.ToString()
-            });
+            return Ok(_mapper.Map<ProfileResponse>(user));
         }
 
         [HttpPut("edit/profile")]
@@ -67,10 +65,11 @@ namespace TestProject.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            return Ok(await _context.Users
+            var users = await _context.Users
                 .Where(x => x.Id.ToString() != HttpContext.User.Identity!.Name)
-                .Select(x => new { x.Id, x.Firstname, x.Lastname, x.Email, x.Role })
-                .ToListAsync());
+                .ToListAsync();
+
+            return Ok(_mapper.Map<List<User>,List<UserResponse>>(users));
         }
 
         [HttpPost("create")]
@@ -87,7 +86,7 @@ namespace TestProject.Controllers
             await _context.Users.AddAsync(model);
             await _context.SaveChangesAsync();
 
-            return Ok(new { model.Id, model.Firstname, model.Lastname, model.Email, model.Role });
+            return Ok(_mapper.Map<UserResponse>(model));
         }
 
         [HttpPut("edit/{id}")]

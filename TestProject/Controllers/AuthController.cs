@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TestProject.Models;
-using TestProject.Models.Request;
-using TestProject.Models.Response;
+using TestProject.ModelsDTO.Request;
+using TestProject.ModelsDTO.Response;
 using TestProject.Services.Authorization;
 using TestProject.Services.Authorization.Models;
 
@@ -16,12 +17,18 @@ namespace TestProject.Controllers
         private readonly ApplicationContext _context;
         private readonly IJwtService _jwtService;
         private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IMapper _mapper;
 
-        public AuthController(ApplicationContext context, IJwtService jwtService, IPasswordHasher<User> passwordHasher)
+        public AuthController(
+            ApplicationContext context, 
+            IJwtService jwtService, 
+            IPasswordHasher<User> passwordHasher, 
+            IMapper mapper)
         {
             _context = context;
             _jwtService = jwtService;
             _passwordHasher = passwordHasher;
+            _mapper = mapper;
         }
 
         [HttpPost("register")]
@@ -32,27 +39,19 @@ namespace TestProject.Controllers
                 return BadRequest("User with such Email exists");
             }
 
-            var newUser = new User()
-            {
-                Lastname = model.Lastname,
-                Firstname = model.Firstname,
-                Email = model.Email,
-                Password = model.Password,
-            };
+            var newUser = _mapper.Map<User>(model);
 
             newUser.Password = _passwordHasher.HashPassword(newUser, model.Password);
 
             await _context.Users.AddAsync(newUser);
             await _context.SaveChangesAsync();
 
-            var token = _jwtService.GetToken(new JwtUser { UserId = newUser.Id.ToString(), Role = newUser.Role.ToString() });
+            var token = _jwtService.GetToken(_mapper.Map<JwtUser>(newUser));
 
-            return Ok(new AuthorizeResponse
-            {
-                Token = token,
-                UserId = newUser.Id,
-                Role = newUser.Role.ToString()
-            });
+            var response = _mapper.Map<AuthorizeResponse>(newUser);
+            response.Token = token;
+
+            return Ok(response);
         }
 
         [HttpPost("login")]
@@ -77,14 +76,12 @@ namespace TestProject.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            var token = _jwtService.GetToken(new JwtUser { UserId = user.Id.ToString(), Role = user.Role.ToString() });
+            var token = _jwtService.GetToken(_mapper.Map<JwtUser>(user));
 
-            return Ok(new AuthorizeResponse
-            {
-                Token = token,
-                Role = user.Role.ToString(),
-                UserId = user.Id
-            });
+            var response = _mapper.Map<AuthorizeResponse>(user);
+            response.Token = token;
+
+            return Ok(response);
         }
     }
 }

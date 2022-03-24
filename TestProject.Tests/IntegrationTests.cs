@@ -21,7 +21,7 @@ namespace TestProject.Tests
         }
 
         [Fact]
-        public async Task UnAuthenticated_user_should_get_roles()
+        public async Task UnAuthenticated_admin_should_not_get_users()
         {
             // Arrange
             var client = _factory.CreateClient();
@@ -34,7 +34,7 @@ namespace TestProject.Tests
         }
 
         [Fact]
-        public async Task UnAuthenticated_user_should_get_roles2()
+        public async Task UnAuthenticated_admin_should_get_users()
         {
             // Arrange
             var client = _factory.WithWebHostBuilder(builder =>

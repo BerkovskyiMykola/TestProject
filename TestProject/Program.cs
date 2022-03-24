@@ -1,15 +1,8 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using TestProject;
-using TestProject.Models;
-using TestProject.Services.Authorization;
-using TestProject.Services.Authorization.Settings;
-using TestProject.Services.Mail;
+using TestProject.Configurations;
 
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,13 +10,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(MyAllowSpecificOrigins,
-                          builder =>
-                          {
-                              builder.WithOrigins("https://localhost:44449")
-                                                  .AllowAnyHeader()
-                                                  .AllowAnyMethod();
-                          });
+    options.AddPolicy(myAllowSpecificOrigins,
+        builder =>
+        {
+            builder.WithOrigins("https://localhost:44449")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+        });
 });
 
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -33,49 +26,10 @@ builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServe
 builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-builder.Services.AddTransient<IJwtService, JwtService>();
-builder.Services.AddTransient<IMailService, MailService>();
-builder.Services.AddTransient<IPasswordHasher<User>, PasswordHasher<User>>();
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddJwtBearer(options =>
-                    {
-                        options.RequireHttpsMetadata = false;
-                        options.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuer = true,
-                            ValidIssuer = JwtSettings.ISSUER,
-                            ValidateAudience = true,
-                            ValidAudience = JwtSettings.AUDIENCE,
-                            ValidateLifetime = true,
-                            IssuerSigningKey = JwtSettings.GetSymmetricSecurityKey(),
-                            ValidateIssuerSigningKey = true,
-                        };
-                    });
-
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "TestProject", Version = "v1" });
-    var jwtSecurityScheme = new OpenApiSecurityScheme
-    {
-        Scheme = JwtBearerDefaults.AuthenticationScheme,
-        BearerFormat = "JWT",
-        Name = "JWT Authentication",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
-        Description = "TestProject",
-        Reference = new OpenApiReference
-        {
-            Id = JwtBearerDefaults.AuthenticationScheme,
-            Type = ReferenceType.SecurityScheme
-        }
-    };
-    options.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        { jwtSecurityScheme, Array.Empty<string>() }
-    });
-});
+builder.Services.AddMapper();
+builder.Services.AddSwagger();
+builder.Services.AddAppServices();
+builder.Services.AddJwtAuthentication();
 
 var app = builder.Build();
 
@@ -97,7 +51,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-app.UseCors(MyAllowSpecificOrigins);
+app.UseCors(myAllowSpecificOrigins);
 
 app.UseAuthentication();
 app.UseAuthorization();
