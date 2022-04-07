@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using TestProject;
 using TestProject.Configurations;
+using TestProject.DAL.EF;
 
 var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 

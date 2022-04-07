@@ -1,29 +1,27 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TestProject.BLL.Services.ManageUser;
+using TestProject.BLL.Services.Account;
 using TestProject.DTO.Request;
-using TestProject.DTO.Response;
 
 namespace TestProject.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class AccountController : ControllerBase
     {
-        private readonly IManageUserService _manageUserService;
+        private readonly IAccountService _accountService;
 
-        public UsersController(IManageUserService manageUserService)
+        public AccountController(IAccountService accountService)
         {
-            _manageUserService = manageUserService;
+            _accountService = accountService;
         }
 
-        [HttpGet("all")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<UserResponse>>> GetUsers()
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(RegisterRequest model)
         {
             try
             {
-                var response = await _manageUserService.GetUsersForAdminAsync();
+                var response = await _accountService.RegisterAsync(model);
 
                 return Ok(response);
             }
@@ -33,13 +31,12 @@ namespace TestProject.Controllers
             }
         }
 
-        [HttpPost("create")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> PostUser(UserRequest model)
+        [HttpPost("login")]
+        public async Task<IActionResult> Authenticate(AuthenticateRequest model)
         {
             try
             {
-                var response = await _manageUserService.CreateUserAsync(model);
+                var response = await _accountService.AuthenticateAsync(model);
 
                 return Ok(response);
             }
@@ -49,15 +46,15 @@ namespace TestProject.Controllers
             }
         }
 
-        [HttpPut("edit/{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> PutUser(Guid id, EditUserRequest model)
+        [HttpGet("profileInfo")]
+        [Authorize]
+        public async Task<IActionResult> GetProfile()
         {
             try
             {
-                await _manageUserService.EditUserAsync(id, model);
+                var response = await _accountService.GetProfileInfoAsync();
 
-                return Ok();
+                return Ok(response);
             }
             catch (KeyNotFoundException ex)
             {
@@ -69,15 +66,15 @@ namespace TestProject.Controllers
             }
         }
 
-        [HttpDelete("delete/{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteUser(Guid id)
+        [HttpPut("edit/profileInfo")]
+        [Authorize]
+        public async Task<IActionResult> PutUserProfile(ProfileRequest profile)
         {
             try
             {
-                await _manageUserService.DeleteUserAsync(id);
+                await _accountService.EditUserProfile(profile);
 
-                return NoContent();
+                return Ok();
             }
             catch (KeyNotFoundException ex)
             {

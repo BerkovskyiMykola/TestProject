@@ -3,11 +3,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using TestProject.MappingProfiles;
-using TestProject.Models;
-using TestProject.Services.Authorization;
-using TestProject.Services.Authorization.Settings;
+using TestProject.BLL.MappingProfiles;
+using TestProject.BLL.Services.JWT;
+using TestProject.BLL.Services.JWT.Settings;
+using TestProject.DAL.Entities;
 using TestProject.Services.Mail;
+using TestProject.BLL.Services.Account;
+using TestProject.BLL.Services.ManageUser;
+using TestProject.BLL.Services.BackupAndRestore;
 
 namespace TestProject.Configurations
 {
@@ -15,9 +18,13 @@ namespace TestProject.Configurations
     {
         public static IServiceCollection AddAppServices(this IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
             services.AddTransient<IJwtService, JwtService>();
             services.AddTransient<IMailService, MailService>();
             services.AddTransient<IPasswordHasher<User>, PasswordHasher<User>>();
+            services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<IManageUserService, ManageUserService>();
+            services.AddTransient<IBackupAndRestoreService, BackupAndRestoreService>();
 
             return services;
         }
