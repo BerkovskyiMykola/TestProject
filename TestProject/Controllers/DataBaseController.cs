@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TestProject.BLL.Exceptions;
-using TestProject.BLL.Services.BackupAndRestore;
+using TestProject.BLL.Services.Database;
 
 namespace TestProject.Controllers
 {
@@ -11,9 +11,9 @@ namespace TestProject.Controllers
     [Authorize(Roles = "Admin")]
     public class DatabaseController : ControllerBase
     {
-        private readonly IBackupAndRestoreService _backupAndRestoreService;
+        private readonly IDatabaseService _backupAndRestoreService;
 
-        public DatabaseController(IBackupAndRestoreService backupAndRestoreService)
+        public DatabaseController(IDatabaseService backupAndRestoreService)
         {
             _backupAndRestoreService = backupAndRestoreService;
         }

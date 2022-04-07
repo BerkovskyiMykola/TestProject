@@ -10,7 +10,7 @@ using TestProject.DAL.Entities;
 using TestProject.Services.Mail;
 using TestProject.BLL.Services.Account;
 using TestProject.BLL.Services.ManageUser;
-using TestProject.BLL.Services.BackupAndRestore;
+using TestProject.BLL.Services.Database;
 
 namespace TestProject.Configurations
 {
@@ -24,7 +24,7 @@ namespace TestProject.Configurations
             services.AddTransient<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IManageUserService, ManageUserService>();
-            services.AddTransient<IBackupAndRestoreService, BackupAndRestoreService>();
+            services.AddTransient<IDatabaseService, DatabaseService>();
 
             return services;
         }
