@@ -1,26 +1,30 @@
 ﻿using AutoMapper;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using TestProject.Controllers;
-using TestProject.MappingProfiles;
-using TestProject.Models;
-using TestProject.ModelsDTO.Request;
-using TestProject.Services.Authorization;
-using TestProject.Services.Authorization.Models;
+using TestProject.BLL.MappingProfiles;
+using TestProject.BLL.Services.Account;
+using TestProject.BLL.Services.JWT;
+using TestProject.BLL.Services.JWT.Models;
+using TestProject.DAL.EF;
+using TestProject.DAL.Entities;
+using TestProject.DTO.Request;
+using TestProject.DTO.Response;
 using Xunit;
 
 namespace TestProject.Tests
 {
-    public class AuthControllerTests : IDisposable
+    public class AccountServiceTests : IDisposable
     {
         public readonly Mock<IJwtService> _stubJwtService = new Mock<IJwtService>();
         public readonly Mock<IPasswordHasher<User>> _stubPasswordHasher = new Mock<IPasswordHasher<User>>();
+        public readonly Mock<IHttpContextAccessor> _stubHttpContextAccessor = new Mock<IHttpContextAccessor>();
         public readonly ApplicationContext _context;
         public readonly IMapper _mapper;
-        public AuthControllerTests()
+        public AccountServiceTests()
         {
             _stubJwtService
                 .Setup(x => x.GetToken(It.IsAny<JwtUser>())).Returns(It.IsAny<string>());
@@ -49,14 +53,20 @@ namespace TestProject.Tests
         {
             //Arrange
             var user = new RegisterRequest { Email = "Test1", Password = "Test1" };
-            var sut = new AuthController(_context, _stubJwtService.Object, _stubPasswordHasher.Object, _mapper);
+            var sut = new AccountService(
+                _context, 
+                _stubJwtService.Object, 
+                _stubPasswordHasher.Object, 
+                _stubHttpContextAccessor.Object, 
+                _mapper
+            );
 
             //Act
-            var result = await sut.Register(user);
+            var result = await sut.RegisterAsync(user);
             var userIsAdded = _context.Users.Any(x => x.Email == user.Email && x.Password == user.Password);
 
             //Assert
-            result.Should().BeOfType<OkObjectResult>();
+            result.Should().BeOfType<AuthorizeResponse>();
             userIsAdded.Should().BeTrue();
         }
 
@@ -65,65 +75,88 @@ namespace TestProject.Tests
         {
             //Arrange
             var user = new RegisterRequest { Email = "Test1", Password = "Test1" };
-            var sut = new AuthController(_context, _stubJwtService.Object, _stubPasswordHasher.Object, _mapper);
+            var sut = new AccountService(
+                _context,
+                _stubJwtService.Object,
+                _stubPasswordHasher.Object,
+                _stubHttpContextAccessor.Object,
+                _mapper
+            );
 
-            await sut.Register(user);
+            await sut.RegisterAsync(user);
 
             //Act
-            var result = await sut.Register(user);
+            var test = sut.RegisterAsync(user);
             var amountRegisteredUsers = _context.Users.Count(x => x.Email == user.Email && x.Password == user.Password);
 
             //Assert
-            result.Should().BeOfType<BadRequestObjectResult>();
             amountRegisteredUsers.Should().Be(1);
         }
 
         [Fact]
-        public async void Should_authorize_a_registered_user()
+        public async void Should_authenticate_a_registered_user()
         {
             //Arrange
             var user = new RegisterRequest { Email = "Test1", Password = "Test1" };
             var auth = new AuthenticateRequest { Email = "Test1", Password = "Test1" };
-            var sut = new AuthController(_context, _stubJwtService.Object, _stubPasswordHasher.Object, _mapper);
+            var sut = new AccountService(
+                _context,
+                _stubJwtService.Object,
+                _stubPasswordHasher.Object,
+                _stubHttpContextAccessor.Object,
+                _mapper
+            );
 
-            await sut.Register(user);
+            await sut.RegisterAsync(user);
 
             //Act
-            var response = await sut.Authenticate(auth);
+            var response = await sut.AuthenticateAsync(auth);
 
             //Assert
-            response.Should().BeOfType<OkObjectResult>();
+            response.Should().BeOfType<AuthorizeResponse>();
         }
 
         [Fact]
-        public async void Should_not_authorize_an_unresgistered_user()
+        public void Should_not_authenticate_an_unresgistered_user()
         {
             //Arrange
             var auth = new AuthenticateRequest { Email = "Test1", Password = "Test1" };
-            var sut = new AuthController(_context, _stubJwtService.Object, _stubPasswordHasher.Object, _mapper);
+            var sut = new AccountService(
+                _context,
+                _stubJwtService.Object,
+                _stubPasswordHasher.Object,
+                _stubHttpContextAccessor.Object,
+                _mapper
+            );
 
             //Act
-            var response = await sut.Authenticate(auth);
+            var result = sut.AuthenticateAsync(auth);
 
             //Assert
-            response.Should().BeOfType<BadRequestObjectResult>();
+            result.Status.Should().Be(TaskStatus.Faulted);
         }
 
         [Fact]
-        public async void Should_not_authorize_a_user_with_wrong_password()
+        public async void Should_not_authenticate_a_user_with_wrong_password()
         {
             //Arrange
             var user = new RegisterRequest { Email = "Test1", Password = "Test1" };
             var auth = new AuthenticateRequest { Email = "Test1", Password = "Test2" };
-            var sut = new AuthController(_context, _stubJwtService.Object, _stubPasswordHasher.Object, _mapper);
+            var sut = new AccountService(
+                _context,
+                _stubJwtService.Object,
+                _stubPasswordHasher.Object,
+                _stubHttpContextAccessor.Object,
+                _mapper
+            );
 
-            await sut.Register(user);
+            await sut.RegisterAsync(user);
 
             //Act
-            var response = await sut.Authenticate(auth);
+            var result = sut.AuthenticateAsync(auth);
 
             //Assert
-            response.Should().BeOfType<BadRequestObjectResult>();
+            result.Status.Should().Be(TaskStatus.Faulted);
         }
 
         public void Dispose()
