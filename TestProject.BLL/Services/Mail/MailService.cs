@@ -5,8 +5,8 @@ namespace TestProject.Services.Mail
 {
     public class MailService : IMailService
     {
-        private readonly string _serviceEmail = "e8956221481065";
-        private readonly string _serviceEmailPassword = "497328fffd589a";
+        private readonly string _serviceEmail = "fa3af6e8a3a1e8";
+        private readonly string _serviceEmailPassword = "fabcf2955ab190";
 
         public async Task SendEmailAsync(string email, string subject, BodyBuilder builder)
         {
