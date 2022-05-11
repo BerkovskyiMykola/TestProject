@@ -117,7 +117,7 @@ namespace TestProject.Tests
         }
 
         [Fact]
-        public void Should_not_authenticate_an_unresgistered_user()
+        public async void Should_not_authenticate_an_unresgistered_user()
         {
             //Arrange
             var auth = new AuthenticateRequest { Email = "Test1", Password = "Test1" };
@@ -133,7 +133,7 @@ namespace TestProject.Tests
             var result = sut.AuthenticateAsync(auth);
 
             //Assert
-            result.ContinueWith(x => x.Status.Should().Be(TaskStatus.Faulted));
+            await result.ContinueWith(x => x.Status.Should().Be(TaskStatus.Faulted));
         }
 
         [Fact]
@@ -156,7 +156,7 @@ namespace TestProject.Tests
             var result = sut.AuthenticateAsync(auth);
 
             //Assert
-            _ = result.ContinueWith(x => x.Status.Should().Be(TaskStatus.Faulted));
+            await result.ContinueWith(x => x.Status.Should().Be(TaskStatus.Faulted));
         }
 
         public void Dispose()
