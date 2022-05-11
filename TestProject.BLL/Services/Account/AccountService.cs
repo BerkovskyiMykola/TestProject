@@ -36,6 +36,7 @@ namespace TestProject.BLL.Services.Account
 
         public async Task<AuthorizeResponse> AuthenticateAsync(AuthenticateRequest model)
         {
+            await Task.Delay(1000);
             if (model == null)
             {
                 throw new ArgumentNullException(nameof(model));

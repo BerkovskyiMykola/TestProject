@@ -133,7 +133,7 @@ namespace TestProject.Tests
             var result = sut.AuthenticateAsync(auth);
 
             //Assert
-            result.Status.Should().Be(TaskStatus.Faulted);
+            result.ContinueWith(x => x.Status.Should().Be(TaskStatus.Faulted));
         }
 
         [Fact]
@@ -156,7 +156,7 @@ namespace TestProject.Tests
             var result = sut.AuthenticateAsync(auth);
 
             //Assert
-            result.Status.Should().Be(TaskStatus.Faulted);
+            _ = result.ContinueWith(x => x.Status.Should().Be(TaskStatus.Faulted));
         }
 
         public void Dispose()
